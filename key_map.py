@@ -26,5 +26,5 @@ cons_double = {
 shift_keys = {'r', 'e', 'q', 't', 'w', 'o', 'p'}
 
 # prom keys
-prom_keys = {'left', 'right', 'backspace', 'space', 'esc'}
-prom_keys_include_enter = {'left', 'right', 'backspace', 'space', 'esc', 'enter'}
+start_keys_exception = {'left', 'right', 'backspace', 'space', 'esc'}
+end_keys_exception = {'left', 'right', 'backspace', 'space', 'esc', 'enter'}

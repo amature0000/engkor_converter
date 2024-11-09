@@ -3,27 +3,27 @@ import sys
 import time
 from key_map import shift_keys
 from utils import end_monitoring, exit_monitoring, start_monitoring, toggle_monitoring
-import state
+from state import State
 import logging
 
-def on_key_press(event):
+def on_key_press(event, state:State):
     if event.name == 'enter':
         state.chatingchang = not state.chatingchang  
         if not state.chatingchang:
-            exit_monitoring()
+            exit_monitoring(state)
             return
 
     if event.name == 'esc':
-        exit_monitoring()
+        exit_monitoring(state)
         return
     elif event.name == state.toggle_key:
-        toggle_monitoring()
+        toggle_monitoring(state)
         return
-    elif event.name == state.start_key:
-        start_monitoring()
+    elif event.name in state.start_key:
+        start_monitoring(state)
         return
     elif event.name == state.end_key:
-        end_monitoring()
+        end_monitoring(state)
         return
         
     if not state.monitoring:
@@ -41,13 +41,16 @@ def on_key_press(event):
         state.collected_keys.append(key)
 
 def main():
+    state = State()
     state.load_config()
-    keyboard.on_press(on_key_press)
-    if state.toggle_key:
-        print(f"프로그램이 실행 중입니다. '{state.toggle_key}' 키를 눌러 입력을 시작/종료하세요.")
-    else:
-        print(f"프로그램이 실행 중입니다. '{state.start_key}'/'{state.end_key}' 키를 눌러 입력을 시작/종료하세요.")
-    print("config.json을 수정하여 변경 가능합니다.")
+    keyboard.on_press(lambda event: on_key_press(event, state))
+    if state.forprint_start:
+        print(f"시작 키: '{state.forprint_start}'")
+    if state.forprint_end:
+        print(f"출력 키: '{state.forprint_end}'")
+    if state.forprint_toggle:
+        print(f"토글 키: '{state.forprint_toggle}'")
+    print(f"초기화 키: 'esc'")
     print("종료하려면 Ctrl + C를 누르세요.")
     print()
     try:
