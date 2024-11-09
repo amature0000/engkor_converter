@@ -18,6 +18,7 @@ class State:
         self.forprint_toggle= '\\'
         self.forprint_start= 'enter'
         self.forprint_end= None
+        self.additional_backspace = 0
 
     def load_config(self):
         if not os.path.exists(CONFIG_FILE):
@@ -45,6 +46,7 @@ class State:
                         temp_end_key = self.end_key
                     self.end_key = temp_end_key
                     self.forprint_end = temp_end_key
+                    self.forprint_toggle = None
                     # read toggle key
                     if self.end_key in self.start_key:
                         self.toggle_key = self.end_key

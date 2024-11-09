@@ -49,9 +49,10 @@ def process_and_insert(state:State):
 
         if korean_string:
             # 영어 입력 삭제
-            for _ in range(len(state.collected_keys) + 2):
+            for _ in range(len(state.collected_keys) + state.additional_backspace):
                 press_once('backspace')
-            logging.info(f"백스페이스 실행 : {len(state.collected_keys) + 2}회")
+            logging.info(f"백스페이스 실행 : {len(state.collected_keys) + state.additional_backspace}회")
+            state.additional_backspace = 0
             # 한글 문자열 타이핑
             keyboard.write(korean_string, delay=0.01)
             logging.info("한글 문자열 타이핑 완료")

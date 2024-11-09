@@ -12,17 +12,23 @@ def on_key_press(event, state:State):
         if not state.chatingchang:
             exit_monitoring(state)
             return
-
+    event_len = len(event.name)
     if event.name == 'esc':
         exit_monitoring(state)
         return
     elif event.name == state.toggle_key:
+        if event_len == 1:
+            state.additional_backspace += 1
         toggle_monitoring(state)
         return
     elif event.name in state.start_key:
+        if event_len == 1:
+            state.additional_backspace += 1
         start_monitoring(state)
         return
     elif event.name == state.end_key:
+        if event_len == 1:
+            state.additional_backspace += 1
         end_monitoring(state)
         return
         
@@ -33,7 +39,7 @@ def on_key_press(event, state:State):
         
     if event.name == 'backspace' and len(state.collected_keys) > 0:
         state.collected_keys.pop()
-    elif event.name == 'space' or len(event.name) == 1:
+    elif event.name == 'space' or event_len == 1:
         print(event.name)
         key = ' ' if event.name == 'space' else event.name.lower()
         if event.name.lower() in shift_keys:
