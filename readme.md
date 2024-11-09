@@ -1,4 +1,6 @@
 # ENG - KOR converter program
+![gifs](for_readme/Animation.webp)
+![gifs](for_readme/Animation2.webp)
 ### Introduction
 this program is a Python-based application. It monitors your keyboard input, converts&assembles to **Korean string**, and replaces the original **English string**. this program works well in the Helldivers2 game.
 
