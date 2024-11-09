@@ -3,53 +3,55 @@ import sys
 import time
 from key_map import shift_keys
 from utils import end_monitoring, exit_monitoring, start_monitoring, toggle_monitoring
-import state
+from state import State
 import logging
 
-def on_key_press(event):
+def on_key_press(event, state:State):
     if event.name == 'enter':
         state.chatingchang = not state.chatingchang  
         if not state.chatingchang:
-            exit_monitoring()
+            exit_monitoring(state)
             return
-
+    event_len = len(event.name)
     if event.name == 'esc':
-        exit_monitoring()
+        exit_monitoring(state)
         return
     elif event.name == state.toggle_key:
-        toggle_monitoring()
+        if event_len == 1:
+            state.additional_backspace += 1
+        toggle_monitoring(state)
         return
-    elif event.name == state.start_key:
-        start_monitoring()
+    elif event.name in state.start_key:
+        if event_len == 1:
+            state.additional_backspace += 1
+        start_monitoring(state)
+        if event.name == 'enter':
+            state.first_type = True
         return
     elif event.name == state.end_key:
-        end_monitoring()
+        if event_len == 1:
+            state.additional_backspace += 1
+        end_monitoring(state)
         return
         
     if not state.monitoring:
         return
-        
+    
     logging.info(f"키 입력 감지: {event.name}")
         
     if event.name == 'backspace' and len(state.collected_keys) > 0:
         state.collected_keys.pop()
-    elif event.name == 'space' or len(event.name) == 1:
-        print(event.name)
+    elif event.name == 'space' or event_len == 1:
         key = ' ' if event.name == 'space' else event.name.lower()
         if event.name.lower() in shift_keys:
             key = event.name
         state.collected_keys.append(key)
 
 def main():
+    state = State()
     state.load_config()
-    keyboard.on_press(on_key_press)
-    if state.toggle_key:
-        print(f"프로그램이 실행 중입니다. '{state.toggle_key}' 키를 눌러 입력을 시작/종료하세요.")
-    else:
-        print(f"프로그램이 실행 중입니다. '{state.start_key}'/'{state.end_key}' 키를 눌러 입력을 시작/종료하세요.")
-    print("config.json을 수정하여 변경 가능합니다.")
-    print("종료하려면 Ctrl + C를 누르세요.")
-    print()
+    keyboard.on_press(lambda event: on_key_press(event, state))
+    state.init_print()
     try:
         while True:
             time.sleep(1)
