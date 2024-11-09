@@ -2,7 +2,9 @@
 ![gifs](for_readme/Animation.webp)
 ![gifs](for_readme/Animation2.webp)
 ### Introduction
-this program is a Python-based application. It monitors your keyboard input, converts&assembles to **Korean string**, and replaces the original **English string**. this program works well in the Helldivers2 game.
+This program is a Python-based application. It monitors your keyboard input, converts&assembles it into **Korean string**, and replaces the original **English string**.
+
+This program is dedicated for in-game chatting, which opens the chat box with the `enter` key. You can modify source code for other uses.
 
 ## How to run
 1. Download [`runme.exe`](./dist/runme.exe) and [`config.json`](./dist/config.json) 
@@ -11,6 +13,7 @@ this program is a Python-based application. It monitors your keyboard input, con
     - `config.json` is optional; missing config file will make program run as default settings
 3. Press the `start key` to start recording your keyboard input, and press the `end key` to stop recording and print your inputs.
     - If the `start key` and `end key` are the same, it will function as a `toggle key`.
+    - default settings are: `start key`: `enter, \`, `end key`: `\`
 4. Press the `esc` key to reset the program.
 5. You can change the operation keys editting `config.json`
 
