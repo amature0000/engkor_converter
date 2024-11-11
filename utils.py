@@ -49,7 +49,7 @@ def process_and_insert(state:State):
         state.additional_backspace = 0  
         # 한글 문자열 타이핑
         if len(state.collected_keys) > 0:
-            time.sleep(0.01)
+            time.sleep(0.1)
             # 수집된 키를 한글 문자열로 변환
             english_str = ''.join(state.collected_keys)
             korean_string = engkor(english_str)
@@ -65,5 +65,6 @@ def process_and_insert(state:State):
         logging.error(f"입력 처리 중 오류 발생: {e}")
 
 def press_once(str):
+    time.sleep(0.01)
     keyboard.press_and_release(str)
     time.sleep(0.01)
