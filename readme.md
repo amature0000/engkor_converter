@@ -7,8 +7,7 @@ This program is a Python-based application. It monitors your keyboard input, con
 This program is dedicated for in-game chatting, which opens the chat box with the `enter` key. You can modify source code for other uses.
 
 ## How to run
-1. Download [`runme.exe`](./dist/runme.exe) and [`config.json`](./dist/config.json) 
-    - or you can download this [zip file](./download.zip)
+1. Download [`download.zip`](https://github.com/amature0000/engkor_converter/releases).
 2. Place both files in the same directory and run `runme.exe` 
     - `config.json` is optional; missing config file will make program run as default settings
 3. Press the `start key` to start recording your keyboard input, and press the `end key` to stop recording and print your inputs.
