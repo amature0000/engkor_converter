@@ -25,6 +25,8 @@ def on_key_press(event, state:State):
         if event_len == 1:
             state.additional_backspace += 1
         start_monitoring(state)
+        if event.name == 'enter':
+            state.first_type = True
         return
     elif event.name == state.end_key:
         if event_len == 1:
@@ -34,7 +36,7 @@ def on_key_press(event, state:State):
         
     if not state.monitoring:
         return
-        
+    
     logging.info(f"키 입력 감지: {event.name}")
         
     if event.name == 'backspace' and len(state.collected_keys) > 0:

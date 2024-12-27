@@ -3,19 +3,26 @@ from state import State
 import time
 import keyboard
 from eng_kor_converter import engkor
+import sound
+
+first_type = False
 
 def toggle_monitoring(state:State):
     state.monitoring = not state.monitoring
     if state.monitoring:
+        sound.activate(state)
         logging.info("키보드 입력 모니터링 시작")
         print("키보드 입력 모니터링 시작")
     else:
+        sound.deactivate(state)
         logging.info("키보드 입력 모니터링 종료")
         print("키보드 입력 모니터링 종료")
         process_and_insert(state)
+        state.first_type = False
     state.collected_keys.clear()
 
 def start_monitoring(state:State):
+    sound.activate(state)
     logging.info("키보드 입력 모니터링 시작")
     print("키보드 입력 모니터링 시작")
     state.monitoring = True
@@ -25,15 +32,19 @@ def end_monitoring(state:State):
     if not state.monitoring:
         logging.warning("모니터링 상태가 아닙니다.")
         return
-    
+    sound.deactivate(state)
     process_and_insert(state)
+    state.first_type = False
     state.monitoring = False
     state.collected_keys.clear()
 
 def exit_monitoring(state:State):
-    state.monitoring = False
+    if state.monitoring == True:
+        sound.deactivate(state)
     logging.info("모니터링 상태 종료")
     print("모니터링 상태 종료")
+    state.first_type = False
+    state.monitoring = False
     state.chatingchang = False
     state.collected_keys.clear()
     state.additional_backspace = 0
@@ -42,11 +53,16 @@ def process_and_insert(state:State):
     try:
         time.sleep(0.1)
         # 기존 입력 삭제
-        temp = len(state.collected_keys)
-        for _ in range(temp + state.additional_backspace):
-            press_once('backspace')
-        logging.info(f"백스페이스 실행 : {temp + state.additional_backspace}회")
-        state.additional_backspace = 0  
+        if state.first_type and state.fast_forward:
+            press_once('esc')
+            press_once('enter')
+            logging.info(f"실험적인 fastforward 기능으로 인해 esc, enter 키 입력됨")
+        else:
+            temp = len(state.collected_keys)
+            for _ in range(temp + state.additional_backspace):
+                press_once('backspace')
+            logging.info(f"백스페이스 실행 : {temp + state.additional_backspace}회")
+        state.additional_backspace = 0
         # 한글 문자열 타이핑
         if len(state.collected_keys) > 0:
             time.sleep(0.1)
