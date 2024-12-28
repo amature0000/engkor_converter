@@ -82,5 +82,6 @@ def process_and_insert(state:State):
 
 def press_once(str):
     time.sleep(0.01)
-    keyboard.press_and_release(str)
+    keyboard.press(str)
     time.sleep(0.01)
+    keyboard.release(str)
