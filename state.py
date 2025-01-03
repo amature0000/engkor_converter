@@ -75,4 +75,4 @@ class State:
             except Exception as e:
                 logging.error(f"설정 파일 로드 중 오류 발생: {e}")
                 print(f"설정 파일 로드 중 오류 발생: {e}")
-        logging.info(f"프로그램 실행: start key:{self.start_key}, end key:{self.end_key}, toggle key:{self.toggle_key}, play sound:{self.play_sound}, fastfoward:{self.fast_forward}")
+        logging.info(f"프로그램 실행: start key:{self.start_key}, end key:{self.end_key}, toggle key:{self.toggle_key}, play sound:{self.play_sound}, fastforward:{self.fast_forward}")

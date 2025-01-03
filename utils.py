@@ -53,10 +53,10 @@ def process_and_insert(state:State):
     try:
         # 기존 입력 삭제
         if state.first_type and state.fast_forward:
-            press_once('esc')
-            time.sleep(0.1)
-            press_once('enter')
-            logging.info(f"실험적인 fastforward 기능으로 인해 esc, enter 키 입력됨")
+            press_once('esc', 0.05)
+            time.sleep(0.05)
+            press_once('enter', 0.05)
+            logging.info(f"fast-forward 기능으로 인해 esc, enter 키 입력됨")
         else:
             temp = len(state.collected_keys)
             for _ in range(temp + state.additional_backspace):
@@ -80,7 +80,7 @@ def process_and_insert(state:State):
     except Exception as e:
         logging.error(f"입력 처리 중 오류 발생: {e}")
 
-def press_once(str):
+def press_once(str, delay=0.01):
     keyboard.press(str)
-    time.sleep(0.05)
+    time.sleep(delay)
     keyboard.release(str)
