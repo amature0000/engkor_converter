@@ -51,10 +51,10 @@ def exit_monitoring(state:State):
 
 def process_and_insert(state:State):
     try:
-        time.sleep(0.1)
         # 기존 입력 삭제
         if state.first_type and state.fast_forward:
             press_once('esc')
+            time.sleep(0.1)
             press_once('enter')
             logging.info(f"실험적인 fastforward 기능으로 인해 esc, enter 키 입력됨")
         else:
@@ -81,7 +81,6 @@ def process_and_insert(state:State):
         logging.error(f"입력 처리 중 오류 발생: {e}")
 
 def press_once(str):
-    time.sleep(0.01)
     keyboard.press(str)
-    time.sleep(0.01)
+    time.sleep(0.05)
     keyboard.release(str)
