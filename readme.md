@@ -27,7 +27,7 @@ This program is dedicated for in-game chatting, which opens the chat box with th
 
 ### Download
 [download.zip](https://github.com/amature0000/engkor_converter/releases)
-### NOTE: Some antivirus vendors detect this file as malware. This is usually a false detection, but if you don't want to risk it, create the .exe file yourself via the Installation method above.
+### NOTE: Some antivirus vendors detect this file as malware. It is a false detection, but if you don't want to risk it, create the .exe file yourself via the Installation method above.
 
 ## Reference
 I used the Eng-Kor converter code from this [blog post](https://mizykk.tistory.com/115). Please refer to it for more details.
