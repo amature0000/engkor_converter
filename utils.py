@@ -53,14 +53,19 @@ def process_and_insert(state:State):
     try:
         # 기존 입력 삭제
         if state.first_type and state.fast_forward:
-            press_once('esc', 0.05)
+            keyboard.press('esc')
             time.sleep(0.05)
-            press_once('enter', 0.05)
+            keyboard.release('esc')
+            keyboard.press('enter')
+            time.sleep(0.05)
+            keyboard.release('enter')
             logging.info(f"fast-forward 기능으로 인해 esc, enter 키 입력됨")
         else:
+            time.sleep(0.1)
             temp = len(state.collected_keys)
             for _ in range(temp + state.additional_backspace):
-                press_once('backspace')
+                keyboard.press_and_release('backspace')
+                time.sleep(0.01)
             logging.info(f"백스페이스 실행 : {temp + state.additional_backspace}회")
         state.additional_backspace = 0
         # 한글 문자열 타이핑
@@ -79,8 +84,3 @@ def process_and_insert(state:State):
             print("변환할 한글 문자가 없습니다.")
     except Exception as e:
         logging.error(f"입력 처리 중 오류 발생: {e}")
-
-def press_once(str, delay=0.01):
-    keyboard.press(str)
-    time.sleep(delay)
-    keyboard.release(str)
