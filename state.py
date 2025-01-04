@@ -68,7 +68,7 @@ class State:
                         logging.warning(f"play_sound, {self.play_sound}는 잘못된 인자입니다.")
                         self.play_sound = True
                     # read fast_foward
-                    self.fast_forward = config.get('experimental_fastfoward', self.fast_forward)
+                    self.fast_forward = config.get('experimental_fastforward', self.fast_forward)
                     if self.fast_forward != True and self.fast_forward != False:
                         logging.warning(f"experimental_fastfoward, {self.fast_forward}는 잘못된 인자입니다.")
                         self.play_sound = True
