@@ -4,6 +4,7 @@ import time
 import keyboard
 from eng_kor_converter import engkor
 import sound
+import os
 
 first_type = False
 
@@ -41,8 +42,9 @@ def end_monitoring(state:State):
 def exit_monitoring(state:State):
     if state.monitoring == True:
         sound.deactivate(state)
-    logging.info("모니터링 상태 종료")
-    print("모니터링 상태 종료")
+    os.system('cls')
+    logging.info("프로그램 상태 초기화")
+    state.init_print()
     state.first_type = False
     state.monitoring = False
     state.chatingchang = False

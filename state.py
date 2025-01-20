@@ -23,6 +23,17 @@ class State:
         self.play_sound=True
         self.fast_forward= True
 
+    def init_print(self):
+        if self.forprint_start:
+            print(f"시작 키: '{self.forprint_start}'")
+        if self.forprint_end:
+            print(f"출력 키: '{self.forprint_end}'")
+        if self.forprint_toggle:
+            print(f"토글 키: '{self.forprint_toggle}'")
+        print(f"초기화 키: 'esc'")
+        print("종료하려면 Ctrl + C를 누르세요.")
+        print()
+
     def load_config(self):
         if not os.path.exists(CONFIG_FILE):
             logging.warning(f"설정 파일 '{CONFIG_FILE}'가 존재하지 않습니다. ")

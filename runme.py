@@ -41,6 +41,7 @@ def on_key_press(event, state:State):
         
     if event.name == 'backspace' and len(state.collected_keys) > 0:
         state.collected_keys.pop()
+        print('(backspace)')
     elif event.name == 'space' or event_len == 1:
         print(event.name)
         key = ' ' if event.name == 'space' else event.name.lower()
@@ -52,15 +53,7 @@ def main():
     state = State()
     state.load_config()
     keyboard.on_press(lambda event: on_key_press(event, state))
-    if state.forprint_start:
-        print(f"시작 키: '{state.forprint_start}'")
-    if state.forprint_end:
-        print(f"출력 키: '{state.forprint_end}'")
-    if state.forprint_toggle:
-        print(f"토글 키: '{state.forprint_toggle}'")
-    print(f"초기화 키: 'esc'")
-    print("종료하려면 Ctrl + C를 누르세요.")
-    print()
+    state.init_print()
     try:
         while True:
             time.sleep(1)
