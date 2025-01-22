@@ -24,6 +24,7 @@ class State:
         self.fast_forward= True
 
     def init_print(self):
+        print("https://github.com/amature0000/engkor_converter\n")
         if self.forprint_start:
             print(f"시작 키: '{self.forprint_start}'")
         if self.forprint_end:
@@ -31,7 +32,7 @@ class State:
         if self.forprint_toggle:
             print(f"토글 키: '{self.forprint_toggle}'")
         print(f"초기화 키: 'esc'")
-        print("종료하려면 Ctrl + C를 누르세요.")
+        print("종료하려면 창을 닫거나 Ctrl + C를 누르세요.")
         print()
 
     def load_config(self):
@@ -85,5 +86,4 @@ class State:
                         self.play_sound = True
             except Exception as e:
                 logging.error(f"설정 파일 로드 중 오류 발생: {e}")
-                print(f"설정 파일 로드 중 오류 발생: {e}")
         logging.info(f"프로그램 실행: start key:{self.start_key}, end key:{self.end_key}, toggle key:{self.toggle_key}, play sound:{self.play_sound}, fastforward:{self.fast_forward}")

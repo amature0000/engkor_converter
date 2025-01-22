@@ -41,9 +41,7 @@ def on_key_press(event, state:State):
         
     if event.name == 'backspace' and len(state.collected_keys) > 0:
         state.collected_keys.pop()
-        print('(backspace)')
     elif event.name == 'space' or event_len == 1:
-        print(event.name)
         key = ' ' if event.name == 'space' else event.name.lower()
         if event.name.lower() in shift_keys:
             key = event.name
