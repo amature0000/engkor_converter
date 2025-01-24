@@ -54,7 +54,7 @@ def process_and_insert(state:State):
             keyboard.press('enter')
             time.sleep(0.05)
             keyboard.release('enter')
-            logging.info(f"program 키 입력: esc\nprogram 키 입력: enter")
+            logging.info(f"program 키 입력: esc, enter")
         else:
             time.sleep(0.1)
             temp = len(state.collected_keys)
