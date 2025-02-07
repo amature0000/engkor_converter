@@ -1,5 +1,4 @@
 hangul-utils==0.2
 keyboard==0.13.5
+Nuitka==2.5.9
 pyinstaller==6.11.1
-pywin32==308
-
