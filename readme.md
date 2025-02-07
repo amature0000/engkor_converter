@@ -25,9 +25,14 @@
 ### 주의: 몇몇 보안 프로그램에서 download.zip 파일을 바이러스로 탐지합니다. 이는 오탐지이며, 대신 직접 소스코드 설치를 통해 실행파일을 생성할 수 있습니다.
 
 ## 레퍼런스
-다음 [블로그 게시물](https://mizykk.tistory.com/115)에서 게시된 eng-kor 변환 파이썬 코드를 사용합니다.
-다음 [helldivers2_helper](https://github.com/rubystarashe/helldivers2_helper) 프로젝트 및 [dead_by_unicode_gui](https://github.com/Codex-in-somnio/dead_by_unicode_gui) 프로젝트로부터 한글화 아이디어를 차용했습니다.
+- [(tistory)한글 키보드 입력 변환하기](https://mizykk.tistory.com/115) 에 게시된 eng-kor 변환 파이썬 코드를 사용합니다.
+- [helldivers2_helper](https://github.com/rubystarashe/helldivers2_helper) 프로젝트 및 [dead_by_unicode_gui](https://github.com/Codex-in-somnio/dead_by_unicode_gui) 프로젝트로부터 한글화 아이디어를 차용했습니다.
 
 <hr>
 
 ## 동작화면
+
+![img](for_readme/1.png)
+![img](for_readme/2.png)
+![img](for_readme/3.png)
+![img](for_readme/4.png)

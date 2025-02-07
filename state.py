@@ -38,7 +38,7 @@ class State:
     
     def show_overlay(self):
         temp_String = ''.join(self.fixed_keys) + self.eng_to_kor()
-        if temp_String == '': temp_String = '\\ 키를 눌러 입력 완료'
+        if temp_String == '': temp_String = ' \"\\\" 키를 눌러 입력 완료'
         self.overlay.show_message(temp_String)
 
     def hide_overlay(self):

@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.font as tkFont
 import win32gui
 import sys
 import time
@@ -31,16 +32,16 @@ class OverlayWindow:
         self.root.attributes("-topmost", True)          # 항상 위에 표시
         #self.root.configure(bg="lightgray")
         # self.root.attributes("-transparentcolor", "white")
-
+        self.font = tkFont.Font(family="d2coding", size=16, weight='bold')
         # 텍스트를 표시할 라벨
         self.label = tk.Label(
             self.root, 
             text="", 
-            font=("d2coding", 16, 'bold'), 
+            font=self.font, 
             bg="lightgray", 
             fg="black",
             anchor='w')
-        self.label.pack(fill="both", expand=True, padx=10, pady=10)
+        self.label.pack(fill="both", expand=True, padx=5, pady=5)
 
         rect = get_window_rect(GAME_TITLE) # busy wait
 
@@ -52,6 +53,9 @@ class OverlayWindow:
         self.root.withdraw()
 
     def show_message(self, message):
+        label_width = self.root.winfo_width() - 10
+        while self.font.measure(message) > label_width and len(message) > 0:
+            message = message[1:]
         self.label.config(text=message)
         self.root.deiconify()  # 창 보이기
 
