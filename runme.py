@@ -1,63 +1,43 @@
 import keyboard
-import sys
-import time
 from key_map import shift_keys
-from utils import end_monitoring, exit_monitoring, start_monitoring, toggle_monitoring
+from utils import start_typing, end_typing, exit_typing
 from state import State
-import logging
 
 def on_key_press(event, state:State):
-    if event.name == 'enter':
-        state.chatingchang = not state.chatingchang  
-        if not state.chatingchang:
-            exit_monitoring(state)
-            return
-    event_len = len(event.name)
-    if event.name == 'esc':
-        exit_monitoring(state)
-        return
-    elif event.name == state.toggle_key:
-        if event_len == 1:
-            state.additional_backspace += 1
-        toggle_monitoring(state)
-        return
-    elif event.name in state.start_key:
-        if event_len == 1:
-            state.additional_backspace += 1
-        start_monitoring(state)
-        if event.name == 'enter':
-            state.first_type = True
+    if event.name == state.start_key:
+        state.typing = not state.typing
+        if state.typing: start_typing(state)
+        else: exit_typing(state)
         return
     elif event.name == state.end_key:
-        if event_len == 1:
-            state.additional_backspace += 1
-        end_monitoring(state)
+        end_typing(state)
         return
-        
-    if not state.monitoring:
+    elif event.name == state.exit_key:
+        exit_typing(state)
         return
-    
-    logging.info(f"키 입력 감지: {event.name}")
-        
-    if event.name == 'backspace' and len(state.collected_keys) > 0:
-        state.collected_keys.pop()
-    elif event.name == 'space' or event_len == 1:
-        key = ' ' if event.name == 'space' else event.name.lower()
-        if event.name.lower() in shift_keys:
-            key = event.name
-        state.collected_keys.append(key)
+    if not state.typing:
+        return
+    if event.name in state.engkor_key:
+        state.mode = not state.mode
+        state.put()
+        return
+    """typing이 켜져 있는 동안 키를 눌렀을 때 실행되는 로직"""
+    event_len = len(event.name)
+    if event.name == 'backspace':
+        state.backspace()
+    elif event.name == 'space':
+        state.put(' ')
+    elif event_len == 1:
+        key = event.name.lower()
+        if event.name.lower() in shift_keys: key = event.name
+        state.insert(key)
+    state.show_overlay()
 
 def main():
     state = State()
-    state.load_config()
     keyboard.on_press(lambda event: on_key_press(event, state))
     state.init_print()
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("\n프로그램을 종료합니다.")
-        sys.exit()
+    state.overlay.mainloop()
 
 if __name__ == "__main__":
     main()
