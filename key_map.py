@@ -23,4 +23,5 @@ cons_double = {
 }
 
 # shift keys
-shift_keys = {'r', 'e', 'q', 't', 'w', 'o', 'p'}
+# shift_keys = {'r', 'e', 'q', 't', 'w', 'o', 'p'}
+shift_keys = {'R', 'E', 'Q', 'T', 'W', 'O', 'P'}

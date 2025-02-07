@@ -8,15 +8,13 @@ import os
 # Game title
 GAME_TITLE = "HELLDIVERS™ 2"
 # ratio
-OFFSET_X = 79.4
-OFFSET_Y = 88.95
-WIDTH_R = 18.359375 #470
-HEIGHT_R = 3.4722222 #50
+WIDTH_R = 18.75 #470
+HEIGHT_R = 3.9 #50
 
 def get_window_rect(title):
     hwnd = win32gui.FindWindow(None, title)
     if hwnd == 0:
-        print("HELLDIVERS™ 2 게임 창을 찾을 수 없습니다. 검색 중...")
+        print(f"{title} 창을 찾을 수 없습니다. 검색 중...")
         while hwnd == 0:
             print('.')
             time.sleep(1)
@@ -25,12 +23,15 @@ def get_window_rect(title):
     return win32gui.GetWindowRect(hwnd)
 
 class OverlayWindow:
-    def __init__(self):
+    def __init__(self, offset_x, offset_y, hud_size):
+        self.offset_x = offset_x
+        self.offset_y = offset_y
+        self.hud_size = hud_size
         # Tkinter 창 생성 및 기본 설정
         self.root = tk.Tk()
         self.root.overrideredirect(True)              # 창 장식 제거
         self.root.attributes("-topmost", True)          # 항상 위에 표시
-        #self.root.configure(bg="lightgray")
+        # self.root.configure(bg="lightgray")
         # self.root.attributes("-transparentcolor", "white")
         self.font = tkFont.Font(family="d2coding", size=16, weight='bold')
         # 텍스트를 표시할 라벨
@@ -43,13 +44,15 @@ class OverlayWindow:
             anchor='w')
         self.label.pack(fill="both", expand=True, padx=5, pady=5)
 
-        rect = get_window_rect(GAME_TITLE) # busy wait
-
+        rect = (-1, -1, 2561, 1441)
+        #rect = get_window_rect(GAME_TITLE) # causes polling
         left, top, right, bottom = rect
-        self.overlay_x = int((right - left) * OFFSET_X / 100)
-        self.overlay_y = int((bottom - top) * OFFSET_Y / 100)
-        self.width = int((right - left) * WIDTH_R / 100)
-        self.height = int((bottom - top) * HEIGHT_R / 100)
+        # HUD 크기 0.9 기준으로 채팅창 계산
+        self.overlay_x = int((right - left) * self.offset_x / 100)
+        self.overlay_y = int((bottom - top) * self.offset_y / 100)
+        self.width = int((right - left) * WIDTH_R / 100 * self.hud_size / 0.9)
+        self.height = int((bottom - top) * HEIGHT_R / 100 * self.hud_size / 0.9)
+
         self.root.geometry(f"{self.width}x{self.height}+{self.overlay_x}+{self.overlay_y}")
         # print(f'오버레이 위치 x:{self.overlay_x}, y:{self.overlay_y}')
         self.root.withdraw()

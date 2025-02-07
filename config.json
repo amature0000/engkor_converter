@@ -1,7 +1,3 @@
 {
-    "start_key": "enter",
-    "start_key_2": "\\",
-    "end_key" : "\\",
-    "play_sound" : 1,
-    "experimental_fastforward" : 1
+    "hud_size": 0.9
 }
