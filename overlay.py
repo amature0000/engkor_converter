@@ -10,6 +10,8 @@ GAME_TITLE = "HELLDIVERS™ 2"
 # ratio
 OFFSET_X = 79.4
 OFFSET_Y = 88.95
+WIDTH_R = 18.359375 #470
+HEIGHT_R = 3.4722222 #50
 
 def get_window_rect(title):
     hwnd = win32gui.FindWindow(None, title)
@@ -23,10 +25,8 @@ def get_window_rect(title):
     return win32gui.GetWindowRect(hwnd)
 
 class OverlayWindow:
-    def __init__(self, width=470, height=50):
+    def __init__(self):
         # Tkinter 창 생성 및 기본 설정
-        self.width = width
-        self.height = height
         self.root = tk.Tk()
         self.root.overrideredirect(True)              # 창 장식 제거
         self.root.attributes("-topmost", True)          # 항상 위에 표시
@@ -48,6 +48,8 @@ class OverlayWindow:
         left, top, right, bottom = rect
         self.overlay_x = int((right - left) * OFFSET_X / 100)
         self.overlay_y = int((bottom - top) * OFFSET_Y / 100)
+        self.width = int((right - left) * WIDTH_R / 100)
+        self.height = int((bottom - top) * HEIGHT_R / 100)
         self.root.geometry(f"{self.width}x{self.height}+{self.overlay_x}+{self.overlay_y}")
         # print(f'오버레이 위치 x:{self.overlay_x}, y:{self.overlay_y}')
         self.root.withdraw()
