@@ -2,6 +2,7 @@ from overlay import OverlayWindow
 import os
 import json
 from eng_kor_converter import engkor
+from key_map import shift_keys
 
 CONFIG_FILE = 'config.json'
 
@@ -57,8 +58,9 @@ class State:
         self.fixed_keys.append(word)
         self.korean_keys = []
         
-    def insert(self, word):
+    def insert(self, word:str):
         if self.mode:
+            if word not in shift_keys: word = word.lower()
             self.korean_keys.append(word)
         else:
             self.fixed_keys.append(word)

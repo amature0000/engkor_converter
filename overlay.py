@@ -31,7 +31,7 @@ class OverlayWindow:
         self.root = tk.Tk()
         self.root.overrideredirect(True)              # 창 장식 제거
         self.root.attributes("-topmost", True)          # 항상 위에 표시
-        #self.root.configure(bg="lightgray")
+        # self.root.configure(bg="lightgray")
         # self.root.attributes("-transparentcolor", "white")
         self.font = tkFont.Font(family="d2coding", size=16, weight='bold')
         # 텍스트를 표시할 라벨
@@ -44,23 +44,15 @@ class OverlayWindow:
             anchor='w')
         self.label.pack(fill="both", expand=True, padx=5, pady=5)
 
-        rect = get_window_rect(GAME_TITLE) # busy wait
+        rect = get_window_rect(GAME_TITLE) # causes polling
 
         left, top, right, bottom = rect
-        # HUD 크기 0.9 기준으로 최초 채팅창 계산
+        # HUD 크기 0.9 기준으로 채팅창 계산
         self.overlay_x = int((right - left) * self.offset_x / 100)
         self.overlay_y = int((bottom - top) * self.offset_y / 100)
         self.width = int((right - left) * WIDTH_R / 100 * self.hud_size / 0.9)
         self.height = int((bottom - top) * HEIGHT_R / 100 * self.hud_size / 0.9)
-        """
-        # 오른쪽 아래를 기준으로 실제 HUD 크기를 반영하여 채팅창 재계산
-        temp_x = self.overlay_x + self.width
-        temp_y = self.overlay_y + self.height
-        self.width = int((right - left) * WIDTH_R / 100 * self.hud_size / 0.9)
-        self.height = int((bottom - top) * HEIGHT_R / 100 * self.hud_size / 0.9)
-        self.overlay_x = temp_x - self.width
-        self.overlay_y = temp_y - self.height
-        """
+
         self.root.geometry(f"{self.width}x{self.height}+{self.overlay_x}+{self.overlay_y}")
         # print(f'오버레이 위치 x:{self.overlay_x}, y:{self.overlay_y}')
         self.root.withdraw()

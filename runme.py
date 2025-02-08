@@ -28,9 +28,12 @@ def on_key_press(event, state:State):
     elif event.name == 'space':
         state.put(' ')
     elif event_len == 1:
+        state.insert(event.name)
+        """
         key = event.name.lower()
         if event.name.lower() in shift_keys: key = event.name
         state.insert(key)
+        """
     state.show_overlay()
 
 def main():
