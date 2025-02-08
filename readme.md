@@ -15,7 +15,7 @@
     ```
     pip install -r requirements.txt
     ```
-3. 다음의 두 가지 방법을 통한 실행파일(.exe) 생성:
+3. 실행파일(.exe) 생성:
     ```
     pyinstaller --onefile --icon=favicon.ico runme.py
     ```
