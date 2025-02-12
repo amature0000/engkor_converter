@@ -47,32 +47,40 @@ class State:
                 
         self.overlay = OverlayWindow(self.offset_x, self.offset_y, self.hud_size)
     
+    def collapse_kor_keys(self):
+        if len(self.korean_keys) == 0: return
+        self.fixed_keys = self.fixed_keys + list(self.eng_to_kor())
+        self.korean_keys = []
+
     def backspace(self):
         if len(self.korean_keys) > 0:
             self.korean_keys.pop()
         else:
             self.fixed_keys.pop()
+        self.show_overlay()
 
-    def put(self, word=''):
-        self.fixed_keys = self.fixed_keys + list(self.eng_to_kor())
-        self.fixed_keys.append(word)
-        self.korean_keys = []
-        
+    def space(self):
+        self.collapse_kor_keys()
+        self.fixed_keys.append(' ')
+        self.show_overlay()
+    
     def insert(self, word:str):
         if self.mode:
             if word not in shift_keys: word = word.lower()
             self.korean_keys.append(word)
         else:
+            self.collapse_kor_keys()
             self.fixed_keys.append(word)
+        self.show_overlay()
 
-    def eng_to_kor(self) -> list:
-        temp = ''.join(self.korean_keys)
-        result = engkor(temp)
-        return result
+    def eng_to_kor(self) -> str:
+        return engkor(''.join(self.korean_keys))
     
     def show_overlay(self):
         temp_String = ''.join(self.fixed_keys) + self.eng_to_kor()
-        if temp_String == '': temp_String = ' \"\\\" 키를 눌러 입력 완료'
+        if temp_String == '': 
+            if self.mode: temp_String = ' \"\\\" 키를 눌러 입력 완료'
+            else: temp_String = 'press \"\\\" key to send the message'
         self.overlay.show_message(temp_String)
 
     def hide_overlay(self):

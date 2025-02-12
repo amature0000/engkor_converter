@@ -4,6 +4,7 @@ from utils import start_typing, end_typing, exit_typing
 from state import State
 
 def on_key_press(event, state:State):
+    """command key process"""
     if event.name == state.start_key:
         state.typing = not state.typing
         if state.typing: start_typing(state)
@@ -19,22 +20,16 @@ def on_key_press(event, state:State):
         return
     if event.name in state.engkor_key:
         state.mode = not state.mode
-        state.put()
+        state.show_overlay()
         return
-    """typing이 켜져 있는 동안 키를 눌렀을 때 실행되는 로직"""
+    """typing key process"""
     event_len = len(event.name)
     if event.name == 'backspace':
         state.backspace()
     elif event.name == 'space':
-        state.put(' ')
+        state.space()
     elif event_len == 1:
         state.insert(event.name)
-        """
-        key = event.name.lower()
-        if event.name.lower() in shift_keys: key = event.name
-        state.insert(key)
-        """
-    state.show_overlay()
 
 def main():
     state = State()

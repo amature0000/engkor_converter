@@ -14,7 +14,7 @@ HEIGHT_R = 3.9 #50
 def get_window_rect(title):
     hwnd = win32gui.FindWindow(None, title)
     if hwnd == 0:
-        print("HELLDIVERS™ 2 게임 창을 찾을 수 없습니다. 검색 중...")
+        print(f"{title} 창을 찾을 수 없습니다. 검색 중...")
         while hwnd == 0:
             print('.')
             time.sleep(1)

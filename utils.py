@@ -14,7 +14,7 @@ def start_typing(state:State):
 
 def end_typing(state:State):
     if not state.typing: return
-    state.put()
+    state.collapse_kor_keys()
     process_and_insert(state)
     state.typing = False
     state.fixed_keys.clear()
