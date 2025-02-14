@@ -13,12 +13,14 @@
     ```
 2. 요구 패키지 설치
     ```
+    cd engkor_converter
     pip install -r requirements.txt
     ```
 3. 실행파일(.exe) 생성:
     ```
     pyinstaller --onefile --icon=favicon.ico runme.py
     ```
+    
 
 ### 다운로드
 [릴리즈 보러 가기](https://github.com/amature0000/engkor_converter/releases)
