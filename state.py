@@ -10,7 +10,7 @@ class State:
     def __init__(self):
         self.typing = False
         self.mode = True # True: kor, False: eng
-        self.fixed_keys = []
+        self.fixed_keys = ''
         self.korean_keys = []
         self.start_key = 'enter'
         self.end_key = '\\'
@@ -47,21 +47,29 @@ class State:
                 
         self.overlay = OverlayWindow(self.offset_x, self.offset_y, self.hud_size)
     
+    def clear(self):
+        self.fixed_keys = ''
+        self.korean_keys.clear()
+
+    def chmod(self):
+        self.mode = not self.mode
+        self.show_overlay()
+
     def collapse_kor_keys(self):
         if len(self.korean_keys) == 0: return
-        self.fixed_keys = self.fixed_keys + list(self.eng_to_kor())
+        self.fixed_keys = self.fixed_keys + self.eng_to_kor()
         self.korean_keys = []
 
     def backspace(self):
         if len(self.korean_keys) > 0:
             self.korean_keys.pop()
         else:
-            self.fixed_keys.pop()
+            self.fixed_keys = self.fixed_keys[:-1]
         self.show_overlay()
 
     def space(self):
         self.collapse_kor_keys()
-        self.fixed_keys.append(' ')
+        self.fixed_keys = self.fixed_keys + ' '
         self.show_overlay()
     
     def insert(self, word:str):
@@ -70,17 +78,17 @@ class State:
             self.korean_keys.append(word)
         else:
             self.collapse_kor_keys()
-            self.fixed_keys.append(word)
+            self.fixed_keys = self.fixed_keys + word
         self.show_overlay()
 
     def eng_to_kor(self) -> str:
         return engkor(''.join(self.korean_keys))
     
     def show_overlay(self):
-        temp_String = ''.join(self.fixed_keys) + self.eng_to_kor()
+        temp_String = self.fixed_keys + self.eng_to_kor()
         if temp_String == '': 
-            if self.mode: temp_String = ' \"\\\" 키를 눌러 입력 완료'
-            else: temp_String = 'press \"\\\" key to send the message'
+            if self.mode: temp_String = ' \"\\\" 키를 눌러 전송'
+            else: temp_String = 'Press \"\\\" key to send the message'
         self.overlay.show_message(temp_String)
 
     def hide_overlay(self):

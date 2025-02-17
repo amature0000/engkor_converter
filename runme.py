@@ -18,11 +18,11 @@ def on_key_press(event, state:State):
         return
     if not state.typing:
         return
-    if event.name in state.engkor_key:
-        state.mode = not state.mode
-        state.show_overlay()
-        return
+    
     """typing key process"""
+    if event.name in state.engkor_key:
+        state.chmod()
+        return
     event_len = len(event.name)
     if event.name == 'backspace':
         state.backspace()
