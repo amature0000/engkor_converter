@@ -15,6 +15,7 @@
     ```
     pip install -r requirements.txt
     pip install requests
+    pip install pywin32
     ```
 3. 실행파일(.exe) 생성:
     ```
