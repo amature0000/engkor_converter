@@ -6,7 +6,7 @@ from key_map import shift_keys
 from track_releases import get_latest_release
 
 # 업데이트 시 변경
-VER = 3.5
+VER = 3.6
 CONFIG_FILE = 'config.json'
 
 class State:
@@ -50,11 +50,11 @@ class State:
                 
         self.overlay = OverlayWindow(self.offset_x, self.offset_y, self.hud_size)
         self.current_version = str(VER)
-        self.latest_version = get_latest_release()
+        self.latest_version, self.patch_note = get_latest_release()
         if self.current_version == self.latest_version:
             self.update_message = ''
         else:
-            self.update_message = f'신규 업데이트가 있습니다! (현재 버전){self.current_version} -> (최신 버전){self.latest_version}\n'
+            self.update_message = f'\n신규 업데이트가 있습니다! (현재 버전){self.current_version} -> (최신 버전){self.latest_version}\n수정사항:\n{self.patch_note}\n'
     
     def clear(self):
         self.fixed_keys = ''
@@ -104,7 +104,7 @@ class State:
         self.overlay.hide_message()
 
     def init_print(self):
-        print(f"{self.update_message}https://github.com/amature0000/engkor_converter \n종료하려면 창을 닫으세요.\n")
+        print(f"https://github.com/amature0000/engkor_converter \n{self.update_message}")
 
 
 """
