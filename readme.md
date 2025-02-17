@@ -11,10 +11,10 @@
     ```
     git clone https://github.com/amature0000/engkor_converter.git
     ```
-2. 요구 패키지 설치
+2. 해당 디렉토리로 이동 후 요구 패키지 설치
     ```
-    cd engkor_converter
     pip install -r requirements.txt
+    pip install requests
     ```
 3. 실행파일(.exe) 생성:
     ```
