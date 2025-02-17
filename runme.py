@@ -1,5 +1,4 @@
 import keyboard
-from key_map import shift_keys
 from utils import start_typing, end_typing, exit_typing
 from state import State
 
