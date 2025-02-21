@@ -15,7 +15,7 @@ def engkor(text):
             vc += '!'
     
     # cvv → fVV / cv → fv / cc → dd 
-    vc = vc.replace('cvv', 'fVV').replace('cv', 'fv').replace('cc', 'dd')
+    vc = vc.replace('cv', 'fv').replace('cvv', 'fVv').replace('ccc', 'ddd').replace('cc', 'dc')
     
     # 2. 자음 / 모음 / 두글자 자음 에서 검색
     i = 0

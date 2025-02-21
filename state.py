@@ -54,7 +54,7 @@ class State:
         if self.current_version == self.latest_version:
             self.update_message = ''
         else:
-            self.update_message = f'\n신규 업데이트가 있습니다! (현재 버전){self.current_version} -> (최신 버전){self.latest_version}\n수정사항:\n{self.patch_note}\n'
+            self.update_message = f'\n신규 릴리즈가 있습니다! (현재 버전){self.current_version} -> (최신 버전){self.latest_version}\n수정사항:\n{self.patch_note}\n'
     
     def clear(self):
         self.fixed_keys = ''
