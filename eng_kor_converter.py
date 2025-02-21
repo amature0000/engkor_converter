@@ -15,7 +15,7 @@ def engkor(text):
             vc += '!'
     
     # cvv → fVV / cv → fv / cc → dd 
-    vc = vc.replace('vv', 'VV').replace('cv', 'fv').replace('ccc', 'ddd').replace('cc', 'dc')
+    vc = vc.replace('vv', 'Vv').replace('ccc', 'CCC').replace('cc', 'Cc')
     
     # 2. 자음 / 모음 / 두글자 자음 에서 검색
     i = 0
@@ -30,7 +30,7 @@ def engkor(text):
         j = 1
         # 한글일 경우
         try:
-            if v == 'f' or v == 'c':   # 초성(f) & 자음(c) = 자음
+            if v == 'c':   # 자음
                 result += cons[t]
 
             elif v == 'V':   # 더블 모음
@@ -40,7 +40,7 @@ def engkor(text):
             elif v == 'v':   # 모음
                 result += vowels[t]
 
-            elif v == 'd':   # 더블 자음
+            elif v == 'C':   # 더블 자음
                 result += cons_double[text[i:i+2]]
                 j += 1
             else:
