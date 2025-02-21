@@ -66,7 +66,8 @@ class State:
 
     def collapse_kor_keys(self):
         if len(self.korean_keys) == 0: return
-        self.fixed_keys = self.fixed_keys + self.eng_to_kor()
+        temp_str = self.eng_to_kor()
+        self.fixed_keys = self.fixed_keys + temp_str
         self.korean_keys = []
 
     def backspace(self):
@@ -76,11 +77,6 @@ class State:
             self.fixed_keys = self.fixed_keys[:-1]
         self.show_overlay()
 
-    def space(self):
-        self.collapse_kor_keys()
-        self.fixed_keys = self.fixed_keys + ' '
-        self.show_overlay()
-    
     def insert(self, word:str):
         if self.mode:
             if word not in shift_keys: word = word.lower()
@@ -91,10 +87,14 @@ class State:
         self.show_overlay()
 
     def eng_to_kor(self) -> str:
-        return engkor(''.join(self.korean_keys))
+        fixed_str, temp_str, split_index = engkor(''.join(self.korean_keys))
+        self.fixed_keys += fixed_str
+        self.korean_keys = self.korean_keys[split_index:]
+        return temp_str
     
     def show_overlay(self):
-        temp_String = self.fixed_keys + self.eng_to_kor()
+        temp_str = self.eng_to_kor()
+        temp_String = self.fixed_keys + temp_str
         if temp_String == '': 
             if self.mode: temp_String = ' \"\\\" 키를 눌러 전송'
             else: temp_String = 'Press \"\\\" key to send the message'

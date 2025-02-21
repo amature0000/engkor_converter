@@ -15,11 +15,15 @@ def engkor(text):
             vc += '!'
     
     # cvv → fVV / cv → fv / cc → dd 
-    vc = vc.replace('cv', 'fv').replace('cvv', 'fVv').replace('ccc', 'ddd').replace('cc', 'dc')
+    vc = vc.replace('vv', 'VV').replace('cv', 'fv').replace('ccc', 'ddd').replace('cc', 'dc')
     
     # 2. 자음 / 모음 / 두글자 자음 에서 검색
     i = 0
-    while i < len(text):
+    t = ''
+    past_t = ''
+    len_text = len(text)
+    while i < len_text:
+        past_t = t
         v = vc[i]
         t = text[i]
 
@@ -42,17 +46,24 @@ def engkor(text):
             else:
                 result += t
                 
-        # 한글이 아닐 경우
+        # 더블 모음(자음) 검색 오류 발생 시
         except KeyError:
             if t in cons:
                 result += cons[t]
             elif t in vowels:
                 result += vowels[t]
-            elif t == ' ':
-                result += ' '
-            else:
-                result += t
         
         i += j
+    result_1 = ''
+    result_2 = join_jamos(result)
+    split_index = 0
+    if len(result_2) == 2:
+        result_1 = result_2[:1]
+        result_2 = result_2[1:]
+        if t in vowels and past_t in cons:
+            split_index = len_text - 2
+        else:
+            split_index = len_text - 1
 
-    return join_jamos(result)
+    # print(f"{result_1}, {result_2}, {split_index}")
+    return result_1, result_2, split_index

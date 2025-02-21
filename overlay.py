@@ -44,8 +44,8 @@ class OverlayWindow:
             anchor='w')
         self.label.pack(fill="both", expand=True, padx=5, pady=5)
 
+        # rect = (-1, -1, 2561, 1441)
         rect = get_window_rect(GAME_TITLE) # causes polling
-
         left, top, right, bottom = rect
         # HUD 크기 0.9 기준으로 채팅창 계산
         self.overlay_x = int((right - left) * self.offset_x / 100)

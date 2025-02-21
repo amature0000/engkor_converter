@@ -3,7 +3,7 @@ from utils import start_typing, end_typing, exit_typing
 from state import State
 
 def on_key_press(event, state:State):
-    """command key process"""
+    """command process"""
     if event.name == state.start_key:
         state.typing = not state.typing
         if state.typing: start_typing(state)
@@ -18,7 +18,7 @@ def on_key_press(event, state:State):
     if not state.typing:
         return
     
-    """typing key process"""
+    """typing process"""
     if event.name in state.engkor_key:
         state.chmod()
         return
@@ -26,7 +26,7 @@ def on_key_press(event, state:State):
     if event.name == 'backspace':
         state.backspace()
     elif event.name == 'space':
-        state.space()
+        state.insert(' ')
     elif event_len == 1:
         state.insert(event.name)
 
