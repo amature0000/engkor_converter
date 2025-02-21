@@ -6,7 +6,7 @@ from key_map import shift_keys
 from track_releases import get_latest_release
 
 # 업데이트 시 변경
-VER = 3.7
+VER = "3.7.1"
 CONFIG_FILE = 'config.json'
 
 class State:
