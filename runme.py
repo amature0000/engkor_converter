@@ -1,25 +1,28 @@
 import keyboard
-from utils import start_typing, end_typing, exit_typing
 from state import State
 
-def on_key_press(event, state:State):
+def on_key_press(event, state):
+    if not state.overlay.root.winfo_exists():
+        keyboard.unhook_all()
+        exit()
     """command process"""
     if event.name == state.start_key:
         state.typing = not state.typing
-        if state.typing: start_typing(state)
-        else: exit_typing(state)
+        if state.typing: state.start_typing()
+        else: state.exit_typing()
         return
     elif event.name == state.end_key:
-        end_typing(state)
+        state.end_typing()
         return
     elif event.name == state.exit_key:
-        exit_typing(state)
+        state.exit_typing()
         return
     if not state.typing:
         return
     
     """typing process"""
     if event.name in state.engkor_key:
+        # 유저 편의성을 위해 채팅창이 켜져 있는 동안만 한/영 동작
         state.chmod()
         return
     event_len = len(event.name)
@@ -33,7 +36,6 @@ def on_key_press(event, state:State):
 def main():
     state = State()
     keyboard.on_press(lambda event: on_key_press(event, state))
-    state.init_print()
     state.overlay.mainloop()
 
 if __name__ == "__main__":
