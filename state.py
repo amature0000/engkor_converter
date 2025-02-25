@@ -33,7 +33,7 @@ class State:
             with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
                 config = json.load(f)
                 self.hud_size = config.get('hud_size', self.hud_size)
-                self.do_update = config.get('get_latest_update', self.do_update)
+                self.do_update = bool(config.get('get_latest_update', self.do_update))
         except Exception as e: pass
         if self.hud_size == 0.75:
             self.offset_x = 82.75
