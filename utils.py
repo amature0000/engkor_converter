@@ -6,14 +6,14 @@ def start_typing(state:State):
     state.typing = True
     state.clear(True)
     state.init_print()
-    print('한글화 모니터링 시작')
+    print('채팅창 모니터링 시작')
 
 def end_typing(state:State):
     if not state.typing: return
     process_and_insert(state)
     state.typing = False
     state.clear()
-    print('한글화 모니터링 종료')
+    print('채팅창 모니터링 종료')
 
 def exit_typing(state:State):
     state.typing = False
@@ -40,4 +40,4 @@ def process_and_insert(state:State):
         time.sleep(0.05)
         keyboard.release('enter')
     except Exception as e:
-        print(f"입력 처리 중 오류 발생: {e}")
+        print(f"처리 중 오류 발생: {e}")

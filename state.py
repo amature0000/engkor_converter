@@ -86,23 +86,20 @@ class State:
 
     def eng_to_kor(self, collapse = False) -> str:
         if len(self.korean_keys) == 0: return ''
-        elif collapse:
-            fixed_str, _, split_index = engkor(''.join(self.korean_keys), collapse)
-            self.fixed_keys += fixed_str
-            self.korean_keys.clear()
-            return ''
-        else:
-            fixed_str, temp_str, split_index = engkor(''.join(self.korean_keys))
-            self.fixed_keys += fixed_str
-            self.korean_keys = self.korean_keys[split_index:]
-            return temp_str
+
+        fixed_str, temp_str, split_index = engkor(''.join(self.korean_keys), collapse)
+        self.fixed_keys += fixed_str
+        if collapse: self.korean_keys.clear()
+        else: self.korean_keys = self.korean_keys[split_index:]
+
+        return temp_str
     
     def show_overlay(self):
         temp_str = self.eng_to_kor()
         temp_string = self.fixed_keys
         if temp_str: temp_string += temp_str
         if not temp_string: 
-            if self.mode: temp_string = ' \"\\\" 키를 눌러 전송'
+            if self.mode: temp_string = '전송하려면 \"\\\" 키 입력'
             else: temp_string = 'Press \"\\\" key to send the message'
         self.overlay.show_message(temp_string)
 
