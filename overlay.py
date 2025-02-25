@@ -29,8 +29,8 @@ class OverlayWindow:
         self.hud_size = hud_size
         # Tkinter 창 생성 및 기본 설정
         self.root = tk.Tk()
-        self.root.overrideredirect(True)              # 창 장식 제거
-        self.root.attributes("-topmost", True)          # 항상 위에 표시
+        self.root.overrideredirect(True) # 창 장식 제거
+        self.root.attributes("-topmost", True) # 항상 위에 표시
         # self.root.configure(bg="lightgray")
         # self.root.attributes("-transparentcolor", "white")
         self.font = tkFont.Font(family="d2coding", size=16, weight='bold')
@@ -47,7 +47,7 @@ class OverlayWindow:
         # rect = (-1, -1, 2561, 1441)
         rect = get_window_rect(GAME_TITLE) # causes polling
         left, top, right, bottom = rect
-        # HUD 크기 0.9 기준으로 채팅창 계산
+        # 채팅창 크기 계산
         self.overlay_x = int((right - left) * self.offset_x / 100)
         self.overlay_y = int((bottom - top) * self.offset_y / 100)
         self.width = int((right - left) * WIDTH_R / 100 * self.hud_size / 0.9)
@@ -60,6 +60,7 @@ class OverlayWindow:
     def show_message(self, message):
         label_width = self.root.winfo_width() - 10
         while self.font.measure(message) > label_width and len(message) > 0:
+            # 긴 채팅의 경우 truncate. TODO: 루프 발생, 성능 저하
             message = message[1:]
         self.label.config(text=message)
         self.root.deiconify()  # 창 보이기

@@ -1,13 +1,10 @@
 from state import State
 import time
 import keyboard
-import os
 
 def start_typing(state:State):
     state.typing = True
-    state.clear()
-    state.show_overlay()
-    os.system('cls')
+    state.clear(True)
     state.init_print()
     print('한글화 모니터링 시작')
 
@@ -16,18 +13,15 @@ def end_typing(state:State):
     process_and_insert(state)
     state.typing = False
     state.clear()
-    state.hide_overlay()
     print('한글화 모니터링 종료')
 
 def exit_typing(state:State):
     state.typing = False
     state.clear()
-    state.hide_overlay()
-    os.system('cls')
     state.init_print()
 
 def process_and_insert(state:State):
-    state.collapse_kor_keys()
+    state.eng_to_kor(True)
     try:
         # 기존 입력 삭제
         keyboard.press('esc')

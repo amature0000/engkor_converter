@@ -20,6 +20,7 @@ def on_key_press(event, state:State):
     
     """typing process"""
     if event.name in state.engkor_key:
+        # 유저 편의성을 위해 채팅창이 켜져 있는 동안만 한/영 동작
         state.chmod()
         return
     event_len = len(event.name)
