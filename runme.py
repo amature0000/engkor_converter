@@ -1,19 +1,18 @@
-import keyboard
-from utils import start_typing, end_typing, exit_typing
+from keyboard import on_press
 from state import State
 
 def on_key_press(event, state:State):
     """command process"""
     if event.name == state.start_key:
         state.typing = not state.typing
-        if state.typing: start_typing(state)
-        else: exit_typing(state)
+        if state.typing: state.start_typing()
+        else: state.exit_typing()
         return
     elif event.name == state.end_key:
-        end_typing(state)
+        state.end_typing()
         return
     elif event.name == state.exit_key:
-        exit_typing(state)
+        state.exit_typing()
         return
     if not state.typing:
         return
@@ -33,8 +32,7 @@ def on_key_press(event, state:State):
 
 def main():
     state = State()
-    keyboard.on_press(lambda event: on_key_press(event, state))
-    state.init_print()
+    on_press(lambda event: on_key_press(event, state))
     state.overlay.mainloop()
 
 if __name__ == "__main__":

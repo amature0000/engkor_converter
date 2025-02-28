@@ -1,13 +1,16 @@
+import keyboard
+import re
 from overlay import OverlayWindow
-import os
-import json
-from eng_kor_converter import engkor
-from key_map import shift_keys
-from track_releases import get_latest_release
+from requests import get
+from json import load
+from time import sleep
+from eng_kor_converter import engkor, shift_keys
 
 # 업데이트 시 변경
-VER = 3.8
+VER = 3.9
 CONFIG_FILE = 'config.json'
+OWNER = "amature0000"
+REPO = "engkor_converter"
 
 class State:
     def __init__(self):
@@ -19,51 +22,81 @@ class State:
         self.end_key = '\\'
         self.exit_key = 'esc'
         self.engkor_key = ['right alt', 'alt']
-        # default
-        self.offset_x = 79.35
-        self.offset_y = 88.5
-        self.hud_size = 0.9
-        # noupdate
-        self.do_update = True
+        # chatbox
+        offset_x = 79.35
+        offset_y = 88.5
+        hud_size = 0.9
+        # do_update
+        do_update = True
         # update_log
-        self.current_version = str(VER)
-        self.latest_version = str(VER) # will be changed via get_latest_release()
-        self.patch_note = ''
+        current_version = str(VER)
+        latest_version = str(VER) # will be changed via get_latest_release()
+        patch_note = ''
         try:
             with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
-                config = json.load(f)
-                self.hud_size = config.get('hud_size', self.hud_size)
-                self.do_update = bool(config.get('get_latest_update', self.do_update))
+                config = load(f)
+                hud_size = config.get('hud_size', hud_size)
+                do_update = bool(config.get('get_latest_update', do_update))
         except Exception as e: pass
-        if self.hud_size == 0.75:
-            self.offset_x = 82.75
-            self.offset_y = 90.4
-        elif self.hud_size == 0.8:
-            self.offset_x = 81.65
-            self.offset_y = 89.75
-        elif self.hud_size == 0.85:
-            self.offset_x = 80.4
-            self.offset_y = 89.2
+        if hud_size == 0.75:
+            offset_x = 82.75
+            offset_y = 90.4
+        elif hud_size == 0.8:
+            offset_x = 81.65
+            offset_y = 89.75
+        elif hud_size == 0.85:
+            offset_x = 80.4
+            offset_y = 89.2
         else: # hud_size == 0.9
-            self.offset_x = 79.35
-            self.offset_y = 88.5
-            self.hud_size = 0.9
+            offset_x = 79.35
+            offset_y = 88.5
+            hud_size = 0.9
         
-        self.overlay = OverlayWindow(self.offset_x, self.offset_y, self.hud_size)
+        # overlay object
+        self.overlay = OverlayWindow(offset_x, offset_y, hud_size)
         
-        if self.do_update:
-            self.latest_version, self.patch_note = get_latest_release()
-        if self.current_version == self.latest_version:
-            self.update_message = ''
+        if do_update:
+            latest_version, patch_note = self.get_latest_release()
+        if current_version == latest_version:
+            print("https://github.com/amature0000/engkor_converter")
         else:
-            self.update_message = f'\n신규 릴리즈가 있습니다! (현재 버전){self.current_version} -> (최신 버전){self.latest_version}\n수정사항:\n{self.patch_note}\n'
-    
+            print(
+                    'https://github.com/amature0000/engkor_converter'
+                    f'\n\n신규 릴리즈가 있습니다! (현재 버전){current_version} -> (최신 버전){latest_version}\n\n수정사항:\n{patch_note}'
+                )
+    def get_latest_release(self) -> str:
+        url = f"https://api.github.com/repos/{OWNER}/{REPO}/releases/latest"
+        response = get(url)
+
+        if response.status_code == 200:
+            data = response.json()
+            latest_version = data.get("tag_name")
+            release_notes = data.get("body")
+            if latest_version and release_notes:            
+                cleaned_notes = re.sub(r'^.*## 변경사항', '', release_notes, flags=re.DOTALL)
+                cleaned_notes = re.sub(r'## 다운로드 파일.*$', '', cleaned_notes, flags=re.DOTALL)
+                filtered_notes = cleaned_notes.strip()
+                return latest_version, filtered_notes
+            else: return "No releases found", "오류: 릴리즈를 확인할 수 없습니다."
+        else:
+            return f"Failed to fetch release info: {response.status_code}", "오류: 릴리즈를 확인할 수 없습니다."
+    # ==============================================================================================
     def clear(self, show_overlay=False):
         self.fixed_keys = ''
         self.korean_keys.clear()
         if show_overlay: self.show_overlay()
         else: self.hide_overlay()
-
+    """
+    def init_print(self):
+        os.system('cls')
+        print(f"https://github.com/amature0000/engkor_converter \n{self.update_message}")
+    def clear(self, show_overlay=False, init_print=False):
+        self.fixed_keys = ''
+        self.korean_keys.clear()
+        if show_overlay: self.show_overlay()
+        else: self.hide_overlay()
+        if init_print: self.init_print()
+    """
     def chmod(self):
         self.mode = not self.mode
         self.show_overlay()
@@ -84,31 +117,70 @@ class State:
             self.fixed_keys = self.fixed_keys + word
         self.show_overlay()
 
-    def eng_to_kor(self, collapse = False) -> str:
+    def eng_to_kor(self, collapse = False) -> str | None: # if collapse: return None
         if len(self.korean_keys) == 0: return ''
-
-        fixed_str, temp_str, split_index = engkor(''.join(self.korean_keys), collapse)
+        temp_korean_keys = ''.join(self.korean_keys)
+        if collapse:
+            fixed_str = engkor(temp_korean_keys, collapse)
+            self.fixed_keys += fixed_str
+            self.korean_keys.clear()
+            return
+        fixed_str, temp_str, split_index = engkor(temp_korean_keys)
         self.fixed_keys += fixed_str
-        if collapse: self.korean_keys.clear()
-        else: self.korean_keys = self.korean_keys[split_index:]
-
+        self.korean_keys = self.korean_keys[split_index:]
         return temp_str
-    
+    # ==============================================================================================   
     def show_overlay(self):
         temp_str = self.eng_to_kor()
         temp_string = self.fixed_keys
         if temp_str: temp_string += temp_str
         if not temp_string: 
+            temp_string = 'Press \"\\\" key to send the message'
             if self.mode: temp_string = '전송하려면 \"\\\" 키 입력'
-            else: temp_string = 'Press \"\\\" key to send the message'
         self.overlay.show_message(temp_string)
 
     def hide_overlay(self):
         self.overlay.hide_message()
+    # ==============================================================================================
+    # from utils.py(legacy)
+    def start_typing(self):
+        self.typing = True
+        self.clear(True)
+        #print('채팅창 모니터링 시작')
 
-    def init_print(self):
-        os.system('cls')
-        print(f"https://github.com/amature0000/engkor_converter \n{self.update_message}")
+    def end_typing(self):
+        if not self.typing: return
+        self.process_and_insert()
+        self.typing = False
+        self.clear()
+        #print('채팅창 모니터링 종료')
+
+    def exit_typing(self):
+        self.typing = False
+        self.clear()
+        #print('채팅창 모니터링 종료')
+
+    def process_and_insert(self):
+        self.eng_to_kor(True)
+        try:
+            # 기존 입력 삭제
+            keyboard.press('esc')
+            sleep(0.05)
+            keyboard.release('esc')
+            keyboard.press('enter')
+            sleep(0.05)
+            keyboard.release('enter')
+            # 한글 문자열 타이핑
+            if len(self.fixed_keys) > 0:
+                sleep(0.1)
+                keyboard.write(self.fixed_keys, delay=0.01)
+            #print(f'문장 입력 완료: {self.fixed_keys}')
+            # 텍스트 전송
+            keyboard.press('enter')
+            sleep(0.05)
+            keyboard.release('enter')
+        except Exception as e:
+            print(f"처리 중 오류 발생: {e}")
 
 
 """
