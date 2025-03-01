@@ -25,7 +25,7 @@ cons_double = {
 }
 
 # =============================================================================
-# caller must check if len(text) == 0, for performance
+# caller must check if len(text) == 0
 def engkor(text, collapse = False): # if collapse: return str
     result = []   # 영 > 한 변환 결과
     
@@ -49,7 +49,6 @@ def engkor(text, collapse = False): # if collapse: return str
     before_last_t = text[len_text - 2]
     while i < len_text:
         v, t = vc[i], text[i]
-        i += 1
         if v in ('f', 'c'):
             result.append(cons[t])
         elif v == 'V':
@@ -67,6 +66,7 @@ def engkor(text, collapse = False): # if collapse: return str
                 i += 1
             else: result.append(cons[t])
         else: result.append(t)
+        i += 1
 
     result_1 = ''
     result_2 = join_jamos(''.join(result))

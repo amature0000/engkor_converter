@@ -1,7 +1,7 @@
 import keyboard
 from state import State
 
-def on_key_press(event, state:State):
+def on_key_press(event, state):
     if not state.overlay.root.winfo_exists():
         keyboard.unhook_all()
         exit()

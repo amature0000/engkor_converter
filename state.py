@@ -7,12 +7,12 @@ from time import sleep
 from eng_kor_converter import engkor
 
 # 업데이트 시 변경
-VER = "3.10.1"
+VER = "3.10.2"
 CONFIG_FILE = 'config.json'
 OWNER = "amature0000"
 REPO = "engkor_converter"
 # shift keys
-shift_keys = {'R', 'E', 'Q', 'T', 'W', 'O', 'P'}
+SHIFT_KEYS = {'R', 'E', 'Q', 'T', 'W', 'O', 'P'}
 
 def get_latest_release():
     url = f"https://api.github.com/repos/{OWNER}/{REPO}/releases/latest"
@@ -81,17 +81,7 @@ class State:
         self.korean_keys.clear()
         if show_overlay: self.show_overlay()
         else: self.hide_overlay()
-    """
-    def init_print(self):
-        os.system('cls')
-        print(f"https://github.com/amature0000/engkor_converter \n{self.update_message}")
-    def clear(self, show_overlay=False, init_print=False):
-        self.fixed_keys = ''
-        self.korean_keys.clear()
-        if show_overlay: self.show_overlay()
-        else: self.hide_overlay()
-        if init_print: self.init_print()
-    """
+        
     def chmod(self):
         self.mode = not self.mode
         self.show_overlay()
@@ -105,7 +95,7 @@ class State:
 
     def insert(self, word:str):
         if self.mode:
-            if word not in shift_keys: word = word.lower()
+            if word not in SHIFT_KEYS: word = word.lower()
             self.korean_keys.append(word)
         else:
             self.eng_to_kor(True)
@@ -141,19 +131,16 @@ class State:
     def start_typing(self):
         self.typing = True
         self.clear(True)
-        #print('채팅창 모니터링 시작')
 
     def end_typing(self):
         if not self.typing: return
         self.process_and_insert()
         self.typing = False
         self.clear()
-        #print('채팅창 모니터링 종료')
 
     def exit_typing(self):
         self.typing = False
         self.clear()
-        #print('채팅창 모니터링 종료')
 
     def process_and_insert(self):
         self.eng_to_kor(True)
@@ -168,7 +155,6 @@ class State:
         if len(self.fixed_keys) > 0:
             sleep(0.1)
             keyboard.write(self.fixed_keys, delay=0.01)
-        #print(f'문장 입력 완료: {self.fixed_keys}')
         # 텍스트 전송
         keyboard.press('enter')
         sleep(0.05)
