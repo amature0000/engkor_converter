@@ -57,8 +57,7 @@ class OverlayWindow:
         self.char_width = self.font.measure('a') // 2
 
     def show_message(self, message):
-        while self.font.measure(message) + self.char_width > self.label_width:
-            # 긴 채팅의 경우 truncate. TODO: 루프 발생, 성능 저하
+        while self.font.measure(message) + self.char_width >= self.label_width:
             message = message[1:]
         self.label.config(text=message)
         self.root.deiconify()  # 창 보이기
@@ -67,11 +66,4 @@ class OverlayWindow:
         self.root.withdraw()
 
     def mainloop(self):
-        try:
-            self.root.mainloop()
-        except Exception:
-            print("\n프로그램을 종료합니다.")
-            exit()
-        except KeyboardInterrupt:
-            print("\n프로그램을 종료합니다.")
-            exit()
+        self.root.mainloop()

@@ -4,14 +4,33 @@ from overlay import OverlayWindow
 from requests import get
 from json import load
 from time import sleep
-from eng_kor_converter import engkor, shift_keys
+from eng_kor_converter import engkor
 
 # 업데이트 시 변경
-VER = 3.9
+VER = "3.10"
 CONFIG_FILE = 'config.json'
 OWNER = "amature0000"
 REPO = "engkor_converter"
+# shift keys
+shift_keys = {'R', 'E', 'Q', 'T', 'W', 'O', 'P'}
 
+def get_latest_release():
+    url = f"https://api.github.com/repos/{OWNER}/{REPO}/releases/latest"
+    response = get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        latest_version = data.get("tag_name")
+        release_notes = data.get("body")
+        if latest_version and release_notes:            
+            cleaned_notes = re.sub(r'^.*## 변경사항', '', release_notes, flags=re.DOTALL)
+            cleaned_notes = re.sub(r'## 다운로드 파일.*$', '', cleaned_notes, flags=re.DOTALL)
+            filtered_notes = cleaned_notes.strip()
+            return latest_version, filtered_notes
+        else: return "No releases found", "오류: 릴리즈를 확인할 수 없습니다."
+    else:
+        return f"Failed to fetch release info: {response.status_code}", "오류: 릴리즈를 확인할 수 없습니다."
+    
 class State:
     def __init__(self):
         self.typing = False
@@ -23,15 +42,11 @@ class State:
         self.exit_key = 'esc'
         self.engkor_key = ['right alt', 'alt']
         # chatbox
+        hud_size = 0.9
         offset_x = 79.35
         offset_y = 88.5
-        hud_size = 0.9
         # do_update
         do_update = True
-        # update_log
-        current_version = str(VER)
-        latest_version = str(VER) # will be changed via get_latest_release()
-        patch_note = ''
         try:
             with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
                 config = load(f)
@@ -55,31 +70,11 @@ class State:
         # overlay object
         self.overlay = OverlayWindow(offset_x, offset_y, hud_size)
         
+        print("https://github.com/amature0000/engkor_converter")
         if do_update:
-            latest_version, patch_note = self.get_latest_release()
-        if current_version == latest_version:
-            print("https://github.com/amature0000/engkor_converter")
-        else:
-            print(
-                    'https://github.com/amature0000/engkor_converter'
-                    f'\n\n신규 릴리즈가 있습니다! (현재 버전){current_version} -> (최신 버전){latest_version}\n\n수정사항:\n{patch_note}'
-                )
-    def get_latest_release(self) -> str:
-        url = f"https://api.github.com/repos/{OWNER}/{REPO}/releases/latest"
-        response = get(url)
-
-        if response.status_code == 200:
-            data = response.json()
-            latest_version = data.get("tag_name")
-            release_notes = data.get("body")
-            if latest_version and release_notes:            
-                cleaned_notes = re.sub(r'^.*## 변경사항', '', release_notes, flags=re.DOTALL)
-                cleaned_notes = re.sub(r'## 다운로드 파일.*$', '', cleaned_notes, flags=re.DOTALL)
-                filtered_notes = cleaned_notes.strip()
-                return latest_version, filtered_notes
-            else: return "No releases found", "오류: 릴리즈를 확인할 수 없습니다."
-        else:
-            return f"Failed to fetch release info: {response.status_code}", "오류: 릴리즈를 확인할 수 없습니다."
+            latest_version, patch_note = get_latest_release()
+            if VER != latest_version:
+                print(f'\n\n신규 릴리즈가 있습니다! (현재 버전){VER} -> (최신 버전){latest_version}\n\n수정사항:\n{patch_note}')
     # ==============================================================================================
     def clear(self, show_overlay=False):
         self.fixed_keys = ''
@@ -117,7 +112,7 @@ class State:
             self.fixed_keys = self.fixed_keys + word
         self.show_overlay()
 
-    def eng_to_kor(self, collapse = False) -> str | None: # if collapse: return None
+    def eng_to_kor(self, collapse = False): # if collapse: return None
         if len(self.korean_keys) == 0: return ''
         temp_korean_keys = ''.join(self.korean_keys)
         if collapse:
@@ -162,26 +157,22 @@ class State:
 
     def process_and_insert(self):
         self.eng_to_kor(True)
-        try:
-            # 기존 입력 삭제
-            keyboard.press('esc')
-            sleep(0.05)
-            keyboard.release('esc')
-            keyboard.press('enter')
-            sleep(0.05)
-            keyboard.release('enter')
-            # 한글 문자열 타이핑
-            if len(self.fixed_keys) > 0:
-                sleep(0.1)
-                keyboard.write(self.fixed_keys, delay=0.01)
-            #print(f'문장 입력 완료: {self.fixed_keys}')
-            # 텍스트 전송
-            keyboard.press('enter')
-            sleep(0.05)
-            keyboard.release('enter')
-        except Exception as e:
-            print(f"처리 중 오류 발생: {e}")
-
+        # 기존 입력 삭제
+        keyboard.press('esc')
+        sleep(0.05)
+        keyboard.release('esc')
+        keyboard.press('enter')
+        sleep(0.05)
+        keyboard.release('enter')
+        # 한글 문자열 타이핑
+        if len(self.fixed_keys) > 0:
+            sleep(0.1)
+            keyboard.write(self.fixed_keys, delay=0.01)
+        #print(f'문장 입력 완료: {self.fixed_keys}')
+        # 텍스트 전송
+        keyboard.press('enter')
+        sleep(0.05)
+        keyboard.release('enter')
 
 """
 휴리스틱한 값들..
