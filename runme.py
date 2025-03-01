@@ -1,7 +1,10 @@
-from keyboard import on_press
+import keyboard
 from state import State
 
 def on_key_press(event, state:State):
+    if not state.overlay.root.winfo_exists():
+        keyboard.unhook_all()
+        exit()
     """command process"""
     if event.name == state.start_key:
         state.typing = not state.typing
@@ -32,7 +35,7 @@ def on_key_press(event, state:State):
 
 def main():
     state = State()
-    on_press(lambda event: on_key_press(event, state))
+    keyboard.on_press(lambda event: on_key_press(event, state))
     state.overlay.mainloop()
 
 if __name__ == "__main__":

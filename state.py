@@ -7,7 +7,7 @@ from time import sleep
 from eng_kor_converter import engkor
 
 # 업데이트 시 변경
-VER = "3.10"
+VER = "3.10.1"
 CONFIG_FILE = 'config.json'
 OWNER = "amature0000"
 REPO = "engkor_converter"
