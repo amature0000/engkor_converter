@@ -1,7 +1,7 @@
 from hangul_utils import join_jamos
 # from key_map.py (legacy)
 # 자음-초성/종성
-cons = {
+CONS = {
     'r': 'ㄱ', 'R': 'ㄲ', 's': 'ㄴ', 'e': 'ㄷ', 'E': 'ㄸ',
     'f': 'ㄹ', 'a': 'ㅁ', 'q': 'ㅂ', 'Q': 'ㅃ', 't': 'ㅅ',
     'T': 'ㅆ', 'd': 'ㅇ', 'w': 'ㅈ', 'W': 'ㅉ', 'c': 'ㅊ',
@@ -9,7 +9,7 @@ cons = {
 }
 
 # 모음-중성
-vowels = {
+VOWS = {
     'k': 'ㅏ', 'o': 'ㅐ', 'i': 'ㅑ', 'O': 'ㅒ', 'j': 'ㅓ',
     'p': 'ㅔ', 'u': 'ㅕ', 'P': 'ㅖ', 'h': 'ㅗ', 'hk': 'ㅘ',
     'ho': 'ㅙ', 'hl': 'ㅚ', 'y': 'ㅛ', 'n': 'ㅜ', 'nj': 'ㅝ',
@@ -18,7 +18,7 @@ vowels = {
 }
 
 # 자음-종성
-cons_double = {
+CONS_DOUBLE = {
     'rt': 'ㄳ', 'sw': 'ㄵ', 'sg': 'ㄶ', 'fr': 'ㄺ', 'fa': 'ㄻ',
     'fq': 'ㄼ', 'ft': 'ㄽ', 'fx': 'ㄾ', 'fv': 'ㄿ', 'fg': 'ㅀ',
     'qt': 'ㅄ'
@@ -32,9 +32,9 @@ def engkor(text, collapse = False): # if collapse: return str
     # 1. 해당 글자가 자음인지 모음인지 확인
     vc_list = []
     for t in text:
-        if t in cons:
+        if t in CONS:
             vc_list.append('c')
-        elif t in vowels:
+        elif t in VOWS:
             vc_list.append('v')
         else:
             vc_list.append('!')
@@ -50,21 +50,21 @@ def engkor(text, collapse = False): # if collapse: return str
     while i < len_text:
         v, t = vc[i], text[i]
         if v in ('f', 'c'):
-            result.append(cons[t])
+            result.append(CONS[t])
         elif v == 'V':
-            double_vowel = vowels.get(text[i:i+2])
+            double_vowel = VOWS.get(text[i:i+2])
             if double_vowel:
                 result.append(double_vowel)
                 i += 1
-            else: result.append(vowels[t])
+            else: result.append(VOWS[t])
         elif v == 'v':
-            result.append(vowels[t])
+            result.append(VOWS[t])
         elif v == 'C':
-            double_cons = cons_double.get(text[i:i+2])
+            double_cons = CONS_DOUBLE.get(text[i:i+2])
             if double_cons:
                 result.append(double_cons)
                 i += 1
-            else: result.append(cons[t])
+            else: result.append(CONS[t])
         else: result.append(t)
         i += 1
 
@@ -76,7 +76,7 @@ def engkor(text, collapse = False): # if collapse: return str
         result_1 = result_2[0]
         result_2 = result_2[1]
         split_index = len_text - 1
-        if last_t in vowels and before_last_t in cons:
+        if last_t in VOWS and before_last_t in CONS:
             split_index -= 1
 
     return result_1, result_2, split_index

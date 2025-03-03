@@ -1,8 +1,6 @@
 import tkinter as tk
 import tkinter.font as tkFont
-import win32gui
-from time import sleep
-from os import system
+from exec_once import get_window_rect
 
 # Game title
 GAME_TITLE = "HELLDIVERS™ 2"
@@ -10,16 +8,6 @@ GAME_TITLE = "HELLDIVERS™ 2"
 WIDTH_R = 18.75 #470
 HEIGHT_R = 3.9 #50
 
-def get_window_rect(title):
-    hwnd = win32gui.FindWindow(None, title)
-    if hwnd == 0:
-        print(f"{title} 창을 찾을 수 없습니다. 검색 중...")
-        while hwnd == 0:
-            print('.')
-            sleep(1)
-            hwnd = win32gui.FindWindow(None, title)
-        system('cls')
-    return win32gui.GetWindowRect(hwnd)
 
 class OverlayWindow:
     def __init__(self, offset_x, offset_y, hud_size):
