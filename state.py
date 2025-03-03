@@ -6,7 +6,7 @@ from eng_kor_converter import engkor
 from exec_once import get_latest_release
 
 # 업데이트 시 변경
-VER = "3.10.2"
+VER = "3.11"
 CONFIG_FILE = 'config.json'
 # shift keys
 SHIFT_KEYS = {'R', 'E', 'Q', 'T', 'W', 'O', 'P'}
