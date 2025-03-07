@@ -3,15 +3,12 @@ from overlay import OverlayWindow
 from json import load
 from time import sleep
 from eng_kor_converter import engkor
-from exec_once import get_latest_release
+from exec_once import print_latest_release
 
-# 업데이트 시 변경
-VER = "3.11"
 CONFIG_FILE = 'config.json'
 # shift keys
 SHIFT_KEYS = {'R', 'E', 'Q', 'T', 'W', 'O', 'P'}
 
-    
 class State:
     def __init__(self):
         self.typing = False
@@ -48,24 +45,16 @@ class State:
             offset_y = 88.5
             hud_size = 0.9
         
-        # overlay object
         self.overlay = OverlayWindow(offset_x, offset_y, hud_size)
         
         print("https://github.com/amature0000/engkor_converter")
-        if do_update:
-            latest_version, patch_note = get_latest_release()
-            if VER != latest_version:
-                print(f'\n\n신규 릴리즈가 있습니다! (현재 버전){VER} -> (최신 버전){latest_version}\n\n수정사항:\n{patch_note}')
+        if do_update: print_latest_release()
     # ==============================================================================================
     def clear(self, show_overlay=False):
         self.fixed_keys = ''
         self.korean_keys.clear()
         if show_overlay: self.show_overlay()
-        else: self.hide_overlay()
-        
-    def chmod(self):
-        self.mode = not self.mode
-        self.show_overlay()
+        else: self.overlay.hide_message()
         
     def backspace(self):
         if len(self.korean_keys) > 0:
@@ -104,25 +93,11 @@ class State:
             temp_string = 'Press \"\\\" key to send the message'
             if self.mode: temp_string = '전송하려면 \"\\\" 키 입력'
         self.overlay.show_message(temp_string)
-
+    """
     def hide_overlay(self):
         self.overlay.hide_message()
+    """
     # ==============================================================================================
-    # from utils.py(legacy)
-    def start_typing(self):
-        self.typing = True
-        self.clear(True)
-
-    def end_typing(self):
-        if not self.typing: return
-        self.process_and_insert()
-        self.typing = False
-        self.clear()
-
-    def exit_typing(self):
-        self.typing = False
-        self.clear()
-
     def process_and_insert(self):
         self.eng_to_kor(True)
         # 기존 입력 삭제
@@ -159,4 +134,24 @@ OFFSET_Y = 89.2
 # ratio HUD = 0.9
 OFFSET_X = 79.35
 OFFSET_Y = 88.5
+"""
+"""
+# from utils.py(legacy)
+def start_typing(self):
+    self.typing = True
+    self.clear(True)
+
+def end_typing(self):
+    if not self.typing: return
+    self.process_and_insert()
+    self.typing = False
+    self.clear()
+
+def exit_typing(self):
+    self.typing = False
+    self.clear()
+
+def chmod(self):
+    self.mode = not self.mode
+    self.show_overlay()
 """

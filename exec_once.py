@@ -18,10 +18,13 @@ def get_window_rect(title):
 import re
 from requests import get
 
+
+# 업데이트 시 변경
+VER = "3.12"
 OWNER = "amature0000"
 REPO = "engkor_converter"
-
-def get_latest_release():
+    
+def print_latest_release():
     url = f"https://api.github.com/repos/{OWNER}/{REPO}/releases/latest"
     response = get(url)
 
@@ -30,10 +33,10 @@ def get_latest_release():
         latest_version = data.get("tag_name")
         release_notes = data.get("body")
         if latest_version and release_notes:            
-            cleaned_notes = re.sub(r'^.*## 변경사항', '', release_notes, flags=re.DOTALL)
-            cleaned_notes = re.sub(r'## 다운로드 파일.*$', '', cleaned_notes, flags=re.DOTALL)
-            filtered_notes = cleaned_notes.strip()
-            return latest_version, filtered_notes
-        else: return "No releases found", "오류: 릴리즈를 확인할 수 없습니다."
-    else:
-        return f"Failed to fetch release info: {response.status_code}", "오류: 릴리즈를 확인할 수 없습니다."
+            release_notes = re.sub(r'^.*## 변경사항', '', release_notes, flags=re.DOTALL)
+            release_notes = re.sub(r'## 다운로드 파일.*$', '', release_notes, flags=re.DOTALL)
+            release_notes = release_notes.strip()
+            if VER != latest_version:
+                print(f'\n\n신규 릴리즈가 있습니다! (현재 버전){VER} -> (최신 버전){latest_version}\n\n수정사항:\n{release_notes}')
+            return
+    print("\n\n오류: 릴리즈를 확인할 수 없습니다.")

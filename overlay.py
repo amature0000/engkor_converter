@@ -42,10 +42,9 @@ class OverlayWindow:
         # truncation을 위한 필드
         self.root.update_idletasks()
         self.label_width = self.root.winfo_width() - 10
-        self.char_width = self.font.measure('a') // 2
 
     def show_message(self, message):
-        while self.font.measure(message) + self.char_width >= self.label_width:
+        while self.font.measure(message) + 5 >= self.label_width:
             message = message[1:]
         self.label.config(text=message)
         self.root.deiconify()  # 창 보이기
