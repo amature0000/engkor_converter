@@ -21,8 +21,6 @@ class State:
         self.engkor_key = ['right alt', 'alt']
         # chatbox
         hud_size = 0.9
-        offset_x = 79.35
-        offset_y = 88.5
         # do_update
         do_update = True
         try:
@@ -34,7 +32,7 @@ class State:
 
         # logistic regression
         offset_x = -22.90 * hud_size + 99.93
-        offset_y = -12.50 * hud_size + 99.78
+        offset_y = -12.50 * hud_size + 99.775
         
         self.overlay = OverlayWindow(offset_x, offset_y, hud_size)
         
