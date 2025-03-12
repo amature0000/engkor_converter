@@ -49,8 +49,5 @@ class OverlayWindow:
         self.label.config(text=message)
         self.root.deiconify()  # 창 보이기
 
-    def hide_message(self):
-        self.root.withdraw()
-
     def mainloop(self):
         self.root.mainloop()

@@ -28,22 +28,13 @@ class State:
         try:
             with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
                 config = load(f)
-                hud_size = config.get('hud_size', hud_size)
+                hud_size = float(config.get('hud_size', hud_size))
                 do_update = bool(config.get('get_latest_update', do_update))
-        except Exception as e: pass
-        if hud_size == 0.75:
-            offset_x = 82.75
-            offset_y = 90.4
-        elif hud_size == 0.8:
-            offset_x = 81.65
-            offset_y = 89.75
-        elif hud_size == 0.85:
-            offset_x = 80.4
-            offset_y = 89.2
-        else: # hud_size == 0.9
-            offset_x = 79.35
-            offset_y = 88.5
-            hud_size = 0.9
+        except Exception: pass
+
+        # logistic regression
+        offset_x = -22.90 * hud_size + 99.93
+        offset_y = -12.50 * hud_size + 99.78
         
         self.overlay = OverlayWindow(offset_x, offset_y, hud_size)
         
@@ -54,7 +45,7 @@ class State:
         self.fixed_keys = ''
         self.korean_keys.clear()
         if show_overlay: self.show_overlay()
-        else: self.overlay.hide_message()
+        else: self.overlay.root.withdraw() # hide overlay
         
     def backspace(self):
         if len(self.korean_keys) > 0:
@@ -93,10 +84,6 @@ class State:
             temp_string = 'Press \"\\\" key to send the message'
             if self.mode: temp_string = '전송하려면 \"\\\" 키 입력'
         self.overlay.show_message(temp_string)
-    """
-    def hide_overlay(self):
-        self.overlay.hide_message()
-    """
     # ==============================================================================================
     def process_and_insert(self):
         self.eng_to_kor(True)
@@ -117,7 +104,7 @@ class State:
         keyboard.release('enter')
 
 """
-휴리스틱한 값들..
+선형회귀 데이터
 
 # ratio HUD = 0.75
 OFFSET_X = 82.75
