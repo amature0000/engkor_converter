@@ -8,8 +8,6 @@ def on_key_press(event, state: State):
     """command process"""
     if event.name == state.start_key:
         state.typing = not state.typing
-        if state.typing: state.typing = True
-        else: state.typing = False
         state.clear(state.typing)
         return
     elif event.name == state.end_key:
