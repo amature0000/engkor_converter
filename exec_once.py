@@ -33,11 +33,11 @@ def print_latest_release():
     data = response.json()
     latest_version = data.get("tag_name")
     release_notes = data.get("body")
-    if latest_version and release_notes:            
+    if latest_version and release_notes:        
+        if version == latest_version: return
         release_notes = re.sub(r'^.*## 변경사항', '', release_notes, flags=re.DOTALL)
         release_notes = re.sub(r'## 다운로드 파일.*$', '', release_notes, flags=re.DOTALL)
         release_notes = release_notes.strip()
-        if version == latest_version: return
         print(f'\n\n신규 릴리즈가 있습니다! (현재 버전){version} -> (최신 버전){latest_version}\n\n수정사항:\n{release_notes}')
 
 def read_json():
