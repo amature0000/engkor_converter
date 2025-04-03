@@ -1,13 +1,8 @@
 import keyboard
+import exec_once
 from overlay import OverlayWindow
-from json import load
 from time import sleep
-from eng_kor_converter import engkor
-from exec_once import print_latest_release
-
-CONFIG_FILE = 'config.json'
-# shift keys
-SHIFT_KEYS = {'R', 'E', 'Q', 'T', 'W', 'O', 'P'}
+from eng_kor_converter import engkor, SHIFT_KEYS
 
 class State:
     def __init__(self):
@@ -19,25 +14,16 @@ class State:
         self.end_key = '\\'
         self.exit_key = 'esc'
         self.engkor_key = ['right alt', 'alt']
-        # chatbox
-        hud_size = 0.9
-        # do_update
-        do_update = True
-        try:
-            with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
-                config = load(f)
-                hud_size = float(config.get('hud_size', hud_size))
-                do_update = bool(config.get('get_latest_update', do_update))
-        except Exception: pass
+        hud_size, do_update = exec_once.read_json()
 
         # logistic regression
         offset_x = -22.90 * hud_size + 99.93
         offset_y = -12.50 * hud_size + 99.775
         
         self.overlay = OverlayWindow(offset_x, offset_y, hud_size)
-        
+        # ==================================================================
         print("https://github.com/amature0000/engkor_converter")
-        if do_update: print_latest_release()
+        if do_update: exec_once.print_latest_release()
     # ==============================================================================================
     def clear(self, show_overlay=False):
         self.fixed_keys = ''

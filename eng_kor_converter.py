@@ -23,7 +23,8 @@ CONS_DOUBLE = {
     'fq': 'ㄼ', 'ft': 'ㄽ', 'fx': 'ㄾ', 'fv': 'ㄿ', 'fg': 'ㅀ',
     'qt': 'ㅄ'
 }
-
+# 쌍자음
+SHIFT_KEYS = {'R', 'E', 'Q', 'T', 'W', 'O', 'P'}
 # =============================================================================
 # caller must check if len(text) == 0
 def engkor(text, collapse = False): # if collapse: return str
