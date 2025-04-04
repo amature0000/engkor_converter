@@ -3,8 +3,8 @@ import exec_once
 import tkinter.font as tkfont
 
 # ratio
-WIDTH_R = 18.75 #470
-HEIGHT_R = 3.9 #50
+#WIDTH_R = 18.75 #470
+#HEIGHT_R = 3.9 #50
 
 class OverlayWindow:
     def __init__(self, offset_x, offset_y, hud_size):
@@ -24,14 +24,14 @@ class OverlayWindow:
             anchor='w')
         self.label.pack(fill="both", expand=True, padx=5, pady=5)
 
-        # rect = (-1, -1, 2561, 1441)
-        rect = exec_once.get_window_rect() # causes polling
+        rect = (-1, -1, 2561, 1441)
+        #rect = exec_once.get_window_rect() # causes polling
         left, top, right, bottom = rect
         # 채팅창 크기 계산
         overlay_x = int((right - left) * offset_x / 100)
         overlay_y = int((bottom - top) * offset_y / 100)
-        width = int((right - left) * WIDTH_R / 100 * hud_size / 0.9)
-        height = int((bottom - top) * HEIGHT_R / 100 * hud_size / 0.9)
+        width = int((right - left) * 18.75 / 100 * hud_size / 0.9)
+        height = int((bottom - top) * 3.9 / 100 * hud_size / 0.9)
 
         self.root.geometry(f"{width}x{height}+{overlay_x}+{overlay_y}")
         self.root.withdraw()

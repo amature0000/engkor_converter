@@ -1,5 +1,5 @@
 from hangul_utils import join_jamos
-# from key_map.py (legacy)
+
 # 자음-초성/종성
 CONS = {
     'r': 'ㄱ', 'R': 'ㄲ', 's': 'ㄴ', 'e': 'ㄷ', 'E': 'ㄸ',
@@ -72,8 +72,8 @@ def engkor(text, collapse = False): # if collapse: return str
     result_1 = ''
     result_2 = join_jamos(''.join(result))
     split_index = 0
-    if collapse: return result_2
-    elif len(result_2) == 2:
+    if collapse: return result_2, None, None
+    if len(result_2) == 2:
         result_1 = result_2[0]
         result_2 = result_2[1]
         split_index = len_text - 1

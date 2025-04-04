@@ -9,7 +9,7 @@ class State:
         self.typing = False
         self.mode = True # True: kor, False: eng
         self.fixed_keys = ''
-        self.korean_keys = []
+        self.korean_keys = ''
         self.start_key = 'enter'
         self.end_key = '\\'
         self.exit_key = 'esc'
@@ -27,13 +27,13 @@ class State:
     # ==============================================================================================
     def clear(self, show_overlay=False):
         self.fixed_keys = ''
-        self.korean_keys.clear()
+        self.korean_keys = ''
         if show_overlay: self.show_overlay()
         else: self.overlay.root.withdraw() # hide overlay
         
     def backspace(self):
         if len(self.korean_keys) > 0:
-            self.korean_keys.pop()
+            self.korean_keys = self.korean_keys[:-1]
         else:
             self.fixed_keys = self.fixed_keys[:-1]
         self.show_overlay()
@@ -41,7 +41,7 @@ class State:
     def insert(self, word:str):
         if self.mode:
             if word not in SHIFT_KEYS: word = word.lower()
-            self.korean_keys.append(word)
+            self.korean_keys += word
         else:
             self.eng_to_kor(True)
             self.fixed_keys = self.fixed_keys + word
@@ -49,15 +49,10 @@ class State:
 
     def eng_to_kor(self, collapse = False): # if collapse: return None
         if len(self.korean_keys) == 0: return ''
-        temp_korean_keys = ''.join(self.korean_keys)
-        if collapse:
-            fixed_str = engkor(temp_korean_keys, collapse)
-            self.fixed_keys += fixed_str
-            self.korean_keys.clear()
-            return
-        fixed_str, temp_str, split_index = engkor(temp_korean_keys)
+        fixed_str, temp_str, split_index = engkor(self.korean_keys, collapse)
         self.fixed_keys += fixed_str
-        self.korean_keys = self.korean_keys[split_index:]
+        if collapse: self.korean_keys = ''
+        else: self.korean_keys = self.korean_keys[split_index:]
         return temp_str
     # ==============================================================================================   
     def show_overlay(self):
