@@ -24,8 +24,8 @@ class OverlayWindow:
             anchor='w')
         self.label.pack(fill="both", expand=True, padx=5, pady=5)
 
-        rect = (-1, -1, 2561, 1441)
-        #rect = exec_once.get_window_rect() # causes polling
+        #rect = (-1, -1, 2561, 1441)
+        rect = exec_once.get_window_rect() # causes polling
         left, top, right, bottom = rect
         # 채팅창 크기 계산
         overlay_x = int((right - left) * offset_x / 100)
