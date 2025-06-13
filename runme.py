@@ -12,20 +12,22 @@ class Controller(QObject):
     def __init__(self, overlay: OverlayWindow):
         super().__init__()
         self.openOverlay.connect(overlay.show_message)
-        self.closeOverlay.connect(overlay.hide_message)
+        self.closeOverlay.connect(overlay.exit_message)
 
     def on_key_press(self, key):
         if key == keyboard.Key.esc:
             self.closeOverlay.emit()
             return
         if key == keyboard.Key.enter:
-            self.openOverlay.emit()
+            self.openOverlay.emit()    
 
 def main():
     app = QApplication(sys.argv)
     state = State()
     overlay = OverlayWindow(state.offset_x, state.offset_y, state.hud_size)
-    controller = Controller(overlay)
+    controller = Controller(overlay)        
+    overlay.textSubmitted.connect(state.process_and_insert)
+
     listener = keyboard.Listener(on_press=lambda key:controller.on_key_press(key))
     listener.start()
     sys.exit(app.exec_())

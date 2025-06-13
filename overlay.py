@@ -1,7 +1,16 @@
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QWidget, QLineEdit, QVBoxLayout
 from PyQt5.QtGui import QFont
-from pynput.mouse import Controller as MouseController, Button
+import ctypes
+import exec_once
+
+KEYEVENTF_KEYUP = 0x0002
+VK_MENU = 0x12  # ALT
+VK_ESCAPE = 0x1B  # ESC
+
+def simulate_key_press(key):
+    ctypes.windll.user32.keybd_event(key, 0, 0, 0)
+    ctypes.windll.user32.keybd_event(key, 0, KEYEVENTF_KEYUP, 0)
 
 class OverlayWindow(QWidget):
     textSubmitted = pyqtSignal(str)
@@ -10,9 +19,13 @@ class OverlayWindow(QWidget):
         super().__init__(flags=Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Window)
         self.setAttribute(Qt.WA_ShowWithoutActivating, False)
         self.setAttribute(Qt.WA_TranslucentBackground)
+        # 인스턴스 필드
+        self.typing = False
+        self.ignore_enter = 0
         # geometry 계산
         rect = (-1, -1, 2561, 1441)
         # rect = exec_once.get_window_rect()  # 실제 윈도우 크기 가져올 때 사용
+
         left, top, right, bottom = rect
         overlay_x = int((right - left) * offset_x / 100)
         overlay_y = int((bottom - top) * offset_y / 100)
@@ -20,33 +33,53 @@ class OverlayWindow(QWidget):
         height = int((bottom - top) * 3.9 / 100 * hud_size / 0.9)
         self.setGeometry(overlay_x, overlay_y, width, height)
 
-        # UI 구성
         font = QFont("D2Coding", 16, QFont.Bold)
+        # UI 구성
         self.input = QLineEdit(self)
         self.input.setFont(font)
         self.input.setPlaceholderText("")
         self.input.setFocusPolicy(Qt.StrongFocus)
+        self.input.returnPressed.connect(self.process_message)
         
-
         layout = QVBoxLayout(self)
         layout.setContentsMargins(5, 5, 5, 5)
         layout.addWidget(self.input)
+
+    def setTyping(self, t):
+        self.typing = t
 
     def show_message(self):
         """
         입력창을 보여주고 포커스 설정
         """
+        if self.typing: return
+        if self.ignore_enter:
+            self.ignore_enter -= 1
+            return
+        self.typing = True
+        self.input.clear()
         self.show()
-        self.input.show()
-        self.input.setFocus()
+        simulate_key_press(VK_MENU) # 포커스 뺏어오기
         self.input.activateWindow()
 
-    def hide_message(self):
+    def exit_message(self):
         """
-        입력된 텍스트를 print()한 뒤 입력창 숨김
+        창 닫기
         """
-        self.input.releaseKeyboard()
-        text = self.input.text()
-        print(text)
+        if not self.typing: return
         self.input.clear()
         self.hide()
+        self.typing = False
+        simulate_key_press(VK_ESCAPE) # esc 키 전달
+
+    def process_message(self):
+        """
+        입력된 텍스트 전달 후 창 닫기
+        """
+        text = self.input.text()
+        self.ignore_enter = 2
+        
+        self.input.clear()
+        self.hide()
+        self.typing = False
+        self.textSubmitted.emit(text) # 텍스트 전달
