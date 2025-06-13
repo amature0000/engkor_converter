@@ -1,5 +1,5 @@
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtWidgets import QWidget, QLineEdit, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QLineEdit, QVBoxLayout, QSizePolicy
 from PyQt5.QtGui import QFont
 import ctypes
 import exec_once
@@ -31,7 +31,7 @@ class OverlayWindow(QWidget):
         overlay_y = int((bottom - top) * offset_y / 100)
         width = int((right - left) * 18.75 / 100 * hud_size / 0.9)
         height = int((bottom - top) * 3.9 / 100 * hud_size / 0.9)
-        self.setGeometry(overlay_x, overlay_y, width, height)
+        self.setGeometry(overlay_x, overlay_y, width, height+10)
 
         font = QFont("D2Coding", 16, QFont.Bold)
         # UI 구성
@@ -40,6 +40,10 @@ class OverlayWindow(QWidget):
         self.input.setPlaceholderText("")
         self.input.setFocusPolicy(Qt.StrongFocus)
         self.input.returnPressed.connect(self.process_message)
+        self.input.setSizePolicy(
+            QSizePolicy.Expanding,
+            QSizePolicy.Expanding
+        )
         
         layout = QVBoxLayout(self)
         layout.setContentsMargins(5, 5, 5, 5)
@@ -77,9 +81,12 @@ class OverlayWindow(QWidget):
         입력된 텍스트 전달 후 창 닫기
         """
         text = self.input.text()
-        self.ignore_enter = 2
         
         self.input.clear()
         self.hide()
         self.typing = False
-        self.textSubmitted.emit(text) # 텍스트 전달
+        if text: 
+            self.textSubmitted.emit(text) # 텍스트 전달
+            self.ignore_enter = 2
+            return
+        simulate_key_press(VK_ESCAPE) # esc 키 전달
