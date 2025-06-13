@@ -22,6 +22,7 @@ class OverlayWindow(QWidget):
         # 인스턴스 필드
         self.typing = False
         self.ignore_enter = 0
+        self.ignore_esc = 0
         # geometry 계산
         rect = (-1, -1, 2561, 1441)
         # rect = exec_once.get_window_rect()  # 실제 윈도우 크기 가져올 때 사용
@@ -71,6 +72,9 @@ class OverlayWindow(QWidget):
         창 닫기
         """
         if not self.typing: return
+        if self.ignore_esc:
+            self.ignore_esc -= 1
+            return
         self.input.clear()
         self.hide()
         self.typing = False
@@ -88,5 +92,6 @@ class OverlayWindow(QWidget):
         if text: 
             self.textSubmitted.emit(text) # 텍스트 전달
             self.ignore_enter = 2
-            return
-        simulate_key_press(VK_ESCAPE) # esc 키 전달
+            self.ignore_esc = 1
+        else:
+            simulate_key_press(VK_ESCAPE) # esc 키 전달
