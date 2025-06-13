@@ -1,4 +1,0 @@
-keyboard
-pynput
-requests
-pywin32
