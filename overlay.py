@@ -24,8 +24,8 @@ class OverlayWindow(QWidget):
         self.ignore_enter = 0
         self.ignore_esc = 0
         # geometry 계산
-        rect = (-1, -1, 2561, 1441)
-        # rect = exec_once.get_window_rect()  # 실제 윈도우 크기 가져올 때 사용
+        # rect = (-1, -1, 2561, 1441)
+        rect = exec_once.get_window_rect()  # 실제 윈도우 크기 가져올 때 사용
 
         left, top, right, bottom = rect
         overlay_x = int((right - left) * offset_x / 100)
