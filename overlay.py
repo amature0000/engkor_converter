@@ -1,49 +1,97 @@
-import tkinter
+from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtWidgets import QWidget, QLineEdit, QVBoxLayout, QSizePolicy
+from PyQt5.QtGui import QFont
+import ctypes
 import exec_once
-import tkinter.font as tkfont
 
-# ratio
-#WIDTH_R = 18.75 #470
-#HEIGHT_R = 3.9 #50
+KEYEVENTF_KEYUP = 0x0002
+VK_MENU = 0x12  # ALT
+VK_ESCAPE = 0x1B  # ESC
 
-class OverlayWindow:
-    def __init__(self, offset_x, offset_y, hud_size):
-        # Tkinter 설정
-        self.root = tkinter.Tk()
-        self.root.overrideredirect(True)
-        self.root.attributes("-topmost", True)
-        # self.root.configure(bg="lightgray")
-        # self.root.attributes("-transparentcolor", "white")
-        self.font = tkfont.Font(family="d2coding", size=16, weight='bold')
-        self.label = tkinter.Label(
-            self.root, 
-            text="", 
-            font=self.font, 
-            bg="lightgray", 
-            fg="black",
-            anchor='w')
-        self.label.pack(fill="both", expand=True, padx=5, pady=5)
+def simulate_key_press(key):
+    ctypes.windll.user32.keybd_event(key, 0, 0, 0)
+    ctypes.windll.user32.keybd_event(key, 0, KEYEVENTF_KEYUP, 0)
 
-        #rect = (-1, -1, 2561, 1441)
-        rect = exec_once.get_window_rect() # causes polling
+class OverlayWindow(QWidget):
+    textSubmitted = pyqtSignal(str)
+
+    def __init__(self, offset_x: float, offset_y: float, hud_size: float):
+        super().__init__(flags=Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Window)
+        self.setAttribute(Qt.WA_ShowWithoutActivating, False)
+        self.setAttribute(Qt.WA_TranslucentBackground)
+        # 인스턴스 필드
+        self.typing = False
+        self.ignore_enter = 0
+        self.ignore_esc = 0
+        # geometry 계산
+        rect = (-1, -1, 2561, 1441)
+        # rect = exec_once.get_window_rect()  # 실제 윈도우 크기 가져올 때 사용
+
         left, top, right, bottom = rect
-        # 채팅창 크기 계산
         overlay_x = int((right - left) * offset_x / 100)
         overlay_y = int((bottom - top) * offset_y / 100)
         width = int((right - left) * 18.75 / 100 * hud_size / 0.9)
         height = int((bottom - top) * 3.9 / 100 * hud_size / 0.9)
+        self.setGeometry(overlay_x, overlay_y, width, height+10)
 
-        self.root.geometry(f"{width}x{height}+{overlay_x}+{overlay_y}")
-        self.root.withdraw()
-        # ===================================
-        self.root.update_idletasks()
-        self.label_width = self.root.winfo_width() - 10
+        font = QFont("D2Coding", 16, QFont.Bold)
+        # UI 구성
+        self.input = QLineEdit(self)
+        self.input.setFont(font)
+        self.input.setPlaceholderText("")
+        self.input.setFocusPolicy(Qt.StrongFocus)
+        self.input.returnPressed.connect(self.process_message)
+        self.input.setSizePolicy(
+            QSizePolicy.Expanding,
+            QSizePolicy.Expanding
+        )
+        
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(5, 5, 5, 5)
+        layout.addWidget(self.input)
 
-    def show_message(self, message):
-        while self.font.measure(message) + 5 >= self.label_width:
-            message = message[1:]
-        self.label.config(text=message)
-        self.root.deiconify()  # 창 보이기
+    def setTyping(self, t):
+        self.typing = t
 
-    def mainloop(self):
-        self.root.mainloop()
+    def show_message(self):
+        """
+        입력창을 보여주고 포커스 설정
+        """
+        if self.typing: return
+        if self.ignore_enter:
+            self.ignore_enter -= 1
+            return
+        self.typing = True
+        self.input.clear()
+        self.show()
+        simulate_key_press(VK_MENU) # 포커스 뺏어오기
+        self.input.activateWindow()
+
+    def exit_message(self):
+        """
+        창 닫기
+        """
+        if not self.typing: return
+        if self.ignore_esc:
+            self.ignore_esc -= 1
+            return
+        self.input.clear()
+        self.hide()
+        self.typing = False
+        simulate_key_press(VK_ESCAPE) # esc 키 전달
+
+    def process_message(self):
+        """
+        입력된 텍스트 전달 후 창 닫기
+        """
+        text = self.input.text()
+        
+        self.input.clear()
+        self.hide()
+        self.typing = False
+        if text: 
+            self.textSubmitted.emit(text) # 텍스트 전달
+            self.ignore_enter = 2
+            self.ignore_esc = 1
+        else:
+            simulate_key_press(VK_ESCAPE) # esc 키 전달
