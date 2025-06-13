@@ -1,4 +1,4 @@
-from pynput.keyboard import Controller, Key
+import keyboard
 import exec_once
 from time import sleep
 
@@ -10,20 +10,27 @@ class State:
         self.offset_x = -22.90 * self.hud_size + 99.93
         self.offset_y = -12.50 * self.hud_size + 99.775
 
-        self.keyboard = Controller()
         # ==================================================================
         print("https://github.com/amature0000/engkor_converter")
         if do_update: exec_once.print_latest_release()
     # ==============================================================================================
     def process_and_insert(self, text):
         # 한글 문자열 타이핑
-        for t in text:
-            self.keyboard.type(t)
-            sleep(0.1)
-
-        self.keyboard.press(Key.enter)
         sleep(0.05)
-        self.keyboard.release(Key.enter)
+        keyboard.press('esc')
+        sleep(0.05)
+        keyboard.release('esc')
+        sleep(0.05)
+        keyboard.press('enter')
+        sleep(0.05)
+        keyboard.release('enter')
+        if len(text) > 0:
+            sleep(0.1)
+            keyboard.write(text, delay=0.01)
+        sleep(0.05)
+        keyboard.press('enter')
+        sleep(0.05)
+        keyboard.release('enter')
 
 """
 선형회귀 데이터
