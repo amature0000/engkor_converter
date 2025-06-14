@@ -1,9 +1,10 @@
 from pynput import keyboard
 from overlay import OverlayWindow
-from state import State
 from PyQt5.QtCore import QObject, pyqtSignal
 from PyQt5.QtWidgets import QApplication
+import utils
 import sys
+
 
 class Controller(QObject):
     openOverlay = pyqtSignal()
@@ -23,10 +24,10 @@ class Controller(QObject):
 
 def main():
     app = QApplication(sys.argv)
-    state = State()
-    overlay = OverlayWindow(state.offset_x, state.offset_y, state.hud_size)
+    hud_size, offset_x, offset_y = utils.read_process_json()
+    overlay = OverlayWindow(offset_x, offset_y, hud_size)
     controller = Controller(overlay)        
-    overlay.textSubmitted.connect(state.process_and_insert)
+    overlay.textSubmitted.connect(utils.process_and_insert)
 
     listener = keyboard.Listener(on_press=lambda key:controller.on_key_press(key))
     listener.start()

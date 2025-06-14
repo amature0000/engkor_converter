@@ -2,7 +2,7 @@ from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QWidget, QLineEdit, QVBoxLayout, QSizePolicy
 from PyQt5.QtGui import QFont
 import ctypes
-import exec_once
+import utils
 
 KEYEVENTF_KEYUP = 0x0002
 VK_MENU = 0x12  # ALT
@@ -25,7 +25,7 @@ class OverlayWindow(QWidget):
         self.ignore_esc = 0
         # geometry 계산
         # rect = (-1, -1, 2561, 1441)
-        rect = exec_once.get_window_rect()  # 실제 윈도우 크기 가져올 때 사용
+        rect = utils.get_window_rect()  # 실제 윈도우 크기 가져올 때 사용
 
         left, top, right, bottom = rect
         overlay_x = int((right - left) * offset_x / 100)
