@@ -8,14 +8,6 @@ from json import load
 
 def process_and_insert(text):
     # 한글 문자열 타이핑
-    sleep(0.05)
-    keyboard.press('esc')
-    sleep(0.05)
-    keyboard.release('esc')
-    sleep(0.05)
-    keyboard.press('enter')
-    sleep(0.05)
-    keyboard.release('enter')
     if len(text) > 0:
         sleep(0.1)
         keyboard.write(text, delay=0.01)

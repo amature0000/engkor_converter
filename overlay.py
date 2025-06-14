@@ -59,7 +59,7 @@ class OverlayWindow(QWidget):
         """
         if self.typing: return
         if self.ignore_enter:
-            self.ignore_enter -= 1
+            self.ignore_enter = False
             return
         self.typing = True
         self.input.clear()
@@ -72,13 +72,9 @@ class OverlayWindow(QWidget):
         창 닫기
         """
         if not self.typing: return
-        if self.ignore_esc:
-            self.ignore_esc -= 1
-            return
         self.input.clear()
         self.hide()
         self.typing = False
-        simulate_key_press(VK_ESCAPE) # esc 키 전달
 
     def process_message(self):
         """
@@ -89,9 +85,8 @@ class OverlayWindow(QWidget):
         self.input.clear()
         self.hide()
         self.typing = False
-        if text: 
-            self.textSubmitted.emit(text) # 텍스트 전달
-            self.ignore_enter = 2
-            self.ignore_esc = 1
-        else:
+        if not text: 
             simulate_key_press(VK_ESCAPE) # esc 키 전달
+            return
+        self.textSubmitted.emit(text) # 텍스트 전달
+        self.ignore_enter = True
