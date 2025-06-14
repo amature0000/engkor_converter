@@ -2,7 +2,6 @@ from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QWidget, QLineEdit, QVBoxLayout, QSizePolicy
 from PyQt5.QtGui import QFont
 import ctypes
-import utils
 
 KEYEVENTF_KEYUP = 0x0002
 VK_MENU = 0x12  # ALT
@@ -15,7 +14,7 @@ def simulate_key_press(key):
 class OverlayWindow(QWidget):
     textSubmitted = pyqtSignal(str)
 
-    def __init__(self, offset_x: float, offset_y: float, hud_size: float):
+    def __init__(self, offset_x: float, offset_y: float, hud_size: float, rect:tuple):
         super().__init__(flags=Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Window)
         self.setAttribute(Qt.WA_ShowWithoutActivating, False)
         self.setAttribute(Qt.WA_TranslucentBackground)
@@ -24,9 +23,6 @@ class OverlayWindow(QWidget):
         self.ignore_enter = 0
         self.ignore_esc = 0
         # geometry 계산
-        # rect = (-1, -1, 2561, 1441)
-        rect = utils.get_window_rect()  # 실제 윈도우 크기 가져올 때 사용
-
         left, top, right, bottom = rect
         overlay_x = int((right - left) * offset_x / 100)
         overlay_y = int((bottom - top) * offset_y / 100)

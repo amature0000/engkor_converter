@@ -24,9 +24,11 @@ class Controller(QObject):
 
 def main():
     app = QApplication(sys.argv)
+    # rect = (-1, -1, 2561, 1441)
+    rect = utils.get_window_rect()  # 실제 윈도우 크기 가져올 때 사용
     hud_size, offset_x, offset_y = utils.read_process_json()
-    overlay = OverlayWindow(offset_x, offset_y, hud_size)
-    controller = Controller(overlay)        
+    overlay = OverlayWindow(offset_x, offset_y, hud_size, rect)
+    controller = Controller(overlay)
     overlay.textSubmitted.connect(utils.process_and_insert)
 
     listener = keyboard.Listener(on_press=lambda key:controller.on_key_press(key))
