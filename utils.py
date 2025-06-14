@@ -29,7 +29,7 @@ def get_window_rect():
     return GetWindowRect(hwnd)
 
 def print_latest_release():
-    version = "3.13"
+    version = "4.0"
     owner = "amature0000"
     repo = "engkor_converter"
     global print_latest_release

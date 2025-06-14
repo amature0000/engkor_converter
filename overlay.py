@@ -75,6 +75,7 @@ class OverlayWindow(QWidget):
         self.input.clear()
         self.hide()
         self.typing = False
+        simulate_key_press(VK_ESCAPE) # esc 키 전달
 
     def process_message(self):
         """
