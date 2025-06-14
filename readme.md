@@ -17,7 +17,7 @@
     ```
 3. 실행파일(.exe) 생성:
     ```
-    pyinstaller --onefile --icon=favicon.ico runme.py
+    pyinstaller --icon=favicon.ico runme.py
     ```
     
 
