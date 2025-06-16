@@ -6,15 +6,18 @@ from os import system
 from requests import get
 from json import load
 
+def simulate_key_process(key):
+    sleep(0.05)
+    keyboard.press(key)
+    sleep(0.05)
+    keyboard.release(key)
+
 def process_and_insert(text):
     # 한글 문자열 타이핑
     if len(text) > 0:
         sleep(0.1)
         keyboard.write(text, delay=0.01)
-    sleep(0.05)
-    keyboard.press('enter')
-    sleep(0.05)
-    keyboard.release('enter')
+    simulate_key_process('enter')
 
 def get_window_rect():
     game_title = "HELLDIVERS™ 2"

@@ -1,15 +1,7 @@
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QWidget, QLineEdit, QVBoxLayout, QSizePolicy
 from PyQt5.QtGui import QFont
-import ctypes
-
-KEYEVENTF_KEYUP = 0x0002
-VK_MENU = 0x12  # ALT
-VK_ESCAPE = 0x1B  # ESC
-
-def simulate_key_press(key):
-    ctypes.windll.user32.keybd_event(key, 0, 0, 0)
-    ctypes.windll.user32.keybd_event(key, 0, KEYEVENTF_KEYUP, 0)
+import utils
 
 class OverlayWindow(QWidget):
     textSubmitted = pyqtSignal(str)
@@ -60,7 +52,7 @@ class OverlayWindow(QWidget):
         self.typing = True
         self.input.clear()
         self.show()
-        simulate_key_press(VK_MENU) # 포커스 뺏어오기
+        utils.simulate_key_process("alt")
         self.input.activateWindow()
 
     def exit_message(self):
@@ -71,7 +63,7 @@ class OverlayWindow(QWidget):
         self.input.clear()
         self.hide()
         self.typing = False
-        simulate_key_press(VK_ESCAPE) # esc 키 전달
+        utils.simulate_key_process('esc') # esc 키 전달
 
     def process_message(self):
         """
@@ -83,7 +75,7 @@ class OverlayWindow(QWidget):
         self.hide()
         self.typing = False
         if not text: 
-            simulate_key_press(VK_ESCAPE) # esc 키 전달
+            utils.simulate_key_process('esc') # esc 키 전달
             return
         self.textSubmitted.emit(text) # 텍스트 전달
         self.ignore_enter = True
