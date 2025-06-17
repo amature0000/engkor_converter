@@ -30,10 +30,9 @@ def main():
 
     hud_size, offset_x, offset_y = utils.read_process_json()
     overlay = OverlayWindow(offset_x, offset_y, hud_size, rect)
-    
-    controller = Controller(overlay)
     overlay.textSubmitted.connect(utils.process_and_insert)
 
+    controller = Controller(overlay)
     keyboard.on_press(lambda e: controller.on_key_press(e.name))
     app.aboutToQuit.connect(keyboard.unhook_all)
 
