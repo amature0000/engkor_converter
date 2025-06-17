@@ -18,6 +18,10 @@ def process_and_insert(text):
         sleep(0.1)
         keyboard.write(text, delay=0.01)
     simulate_key_process('enter')
+    # sleep(0.05)
+    # keyboard.press('enter')
+    # sleep(0.05)
+    # keyboard.release('enter')
 
 def get_window_rect():
     game_title = "HELLDIVERS™ 2"

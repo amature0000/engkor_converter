@@ -46,13 +46,10 @@ class OverlayWindow(QWidget):
         입력창을 보여주고 포커스 설정
         """
         if self.typing: return
-        if self.ignore_enter:
-            self.ignore_enter = False
-            return
         self.typing = True
         self.input.clear()
         self.show()
-        utils.simulate_key_process("alt")
+        utils.simulate_key_process("alt") # 포커스 뺏어오기
         self.input.activateWindow()
 
     def exit_message(self):
@@ -78,4 +75,3 @@ class OverlayWindow(QWidget):
             utils.simulate_key_process('esc') # esc 키 전달
             return
         self.textSubmitted.emit(text) # 텍스트 전달
-        self.ignore_enter = True
