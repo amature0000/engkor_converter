@@ -38,9 +38,6 @@ class OverlayWindow(QWidget):
         layout.setContentsMargins(5, 5, 5, 5)
         layout.addWidget(self.input)
 
-    def setTyping(self, t):
-        self.typing = t
-
     def show_message(self):
         """
         입력창을 보여주고 포커스 설정

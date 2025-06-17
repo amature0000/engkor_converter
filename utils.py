@@ -14,9 +14,8 @@ def simulate_key_process(key):
 
 def process_and_insert(text):
     # 한글 문자열 타이핑
-    if len(text) > 0:
-        sleep(0.1)
-        keyboard.write(text, delay=0.01)
+    sleep(0.1)
+    keyboard.write(text, delay=0.01)
     simulate_key_process('enter')
     # sleep(0.05)
     # keyboard.press('enter')
