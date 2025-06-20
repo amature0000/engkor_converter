@@ -29,9 +29,8 @@
 - [helldivers2_helper](https://github.com/rubystarashe/helldivers2_helper): 한글 채팅을 포함해 다양한 기능을 지원하는 헬다이버즈2 매니저 프로그램
 - [dead_by_unicode_gui](https://github.com/Codex-in-somnio/dead_by_unicode_gui): 가상 키보드를 활용해 사용자 입력을 모니터링하고 출력하는 프로그램
 
-## 동작화면
-
-![img](for_readme/1.png)
-![img](for_readme/2.png)
-![img](for_readme/3.png)
-![img](for_readme/4.png)
+## 버전
+### ver 3(3.xx)
+화면 위로 오버레이 창을 띄워, 기존 채팅창을 가리고 사용자 키보드 입력을 모니터링
+### ver 4(4.xx)
+화면 위로 새로운 입력 창을 띄워, 커서 포커스를 해당 입력창으로 이동시키고 사용자 입력을 받아옴
