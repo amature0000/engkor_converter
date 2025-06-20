@@ -14,7 +14,7 @@ def simulate_key_process(key):
 
 def process_and_insert(text):
     # 한글 문자열 타이핑
-    sleep(0.1)
+    sleep(0.05)
     keyboard.write(text, delay=0.01)
     simulate_key_process('enter')
     # sleep(0.05)
@@ -57,10 +57,10 @@ def print_latest_release():
         release_notes = release_notes.strip()
         print(f'\n\n신규 릴리즈가 있습니다! (현재 버전){version} -> (최신 버전){latest_version}\n\n수정사항:\n{release_notes}')
 
-def read_process_json():
+def read_json():
     config_file = 'config.json'
-    global read_process_json
-    read_process_json = None
+    global read_json
+    read_json = None
     hud_size = 0.9
     do_update = True
     try:
@@ -72,10 +72,7 @@ def read_process_json():
     print("https://github.com/amature0000/engkor_converter")
     if do_update: print_latest_release()
 
-    offset_x = -22.90 * hud_size + 99.93
-    offset_y = -12.50 * hud_size + 99.775
-
-    return hud_size, offset_x, offset_y
+    return hud_size
 
 
 """

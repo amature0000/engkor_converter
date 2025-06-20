@@ -5,7 +5,6 @@ from PyQt5.QtWidgets import QApplication
 import utils
 import sys
 
-
 class Controller(QObject):
     openOverlay = pyqtSignal()
     closeOverlay = pyqtSignal()
@@ -27,9 +26,9 @@ def main():
 
     # rect = (-1, -1, 2561, 1441)
     rect = utils.get_window_rect()  # 실제 윈도우 크기 가져올 때 사용
+    hud_size = utils.read_json()
 
-    hud_size, offset_x, offset_y = utils.read_process_json()
-    overlay = OverlayWindow(offset_x, offset_y, hud_size, rect)
+    overlay = OverlayWindow(hud_size, rect)
     overlay.textSubmitted.connect(utils.process_and_insert)
 
     controller = Controller(overlay)

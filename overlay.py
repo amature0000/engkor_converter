@@ -6,15 +6,17 @@ import utils
 class OverlayWindow(QWidget):
     textSubmitted = pyqtSignal(str)
 
-    def __init__(self, offset_x: float, offset_y: float, hud_size: float, rect:tuple):
+    def __init__(self, hud_size: float, rect:tuple):
         super().__init__(flags=Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Window)
         self.setAttribute(Qt.WA_ShowWithoutActivating, False)
         self.setAttribute(Qt.WA_TranslucentBackground)
         # 인스턴스 필드
         self.typing = False
         self.ignore_enter = 0
-        self.ignore_esc = 0
         # geometry 계산
+        offset_x = -22.90 * hud_size + 99.93
+        offset_y = -12.50 * hud_size + 99.775
+
         left, top, right, bottom = rect
         overlay_x = int((right - left) * offset_x / 100)
         overlay_y = int((bottom - top) * offset_y / 100)
@@ -29,10 +31,7 @@ class OverlayWindow(QWidget):
         self.input.setPlaceholderText("")
         self.input.setFocusPolicy(Qt.StrongFocus)
         self.input.returnPressed.connect(self.process_message)
-        self.input.setSizePolicy(
-            QSizePolicy.Expanding,
-            QSizePolicy.Expanding
-        )
+        self.input.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         
         layout = QVBoxLayout(self)
         layout.setContentsMargins(5, 5, 5, 5)
