@@ -11,8 +11,7 @@ class OverlayWindow(QWidget):
         self.setAttribute(Qt.WA_ShowWithoutActivating, False)
         self.setAttribute(Qt.WA_TranslucentBackground)
         # 인스턴스 필드
-        self.typing = False
-        self.ignore_enter = 0
+        
         # geometry 계산
         offset_x = -22.90 * hud_size + 99.93
         offset_y = -12.50 * hud_size + 99.775
@@ -39,10 +38,8 @@ class OverlayWindow(QWidget):
 
     def show_message(self):
         """
-        입력창을 보여주고 포커스 설정
+        창 열고 포커스 설정
         """
-        if self.typing: return
-        self.typing = True
         self.input.clear()
         self.show()
         utils.simulate_key_process("alt") # 포커스 뺏어오기
@@ -52,22 +49,17 @@ class OverlayWindow(QWidget):
         """
         창 닫기
         """
-        if not self.typing: return
         self.input.clear()
         self.hide()
-        self.typing = False
         utils.simulate_key_process('esc') # esc 키 전달
 
     def process_message(self):
         """
-        입력된 텍스트 전달 후 창 닫기
+        창 닫고 텍스트 전달
         """
         text = self.input.text()
-        
         self.input.clear()
         self.hide()
-        self.typing = False
-        if not text: 
-            utils.simulate_key_process('esc') # esc 키 전달
-            return
+        if not text: return
+
         self.textSubmitted.emit(text) # 텍스트 전달

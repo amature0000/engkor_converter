@@ -13,13 +13,16 @@ class Controller(QObject):
         super().__init__()
         self.openOverlay.connect(overlay.show_message)
         self.closeOverlay.connect(overlay.exit_message)
+        self.typing = False
 
     def on_key_press(self, key):
-        if key == 'esc':
+        if key == 'esc' and self.typing:
+            self.typing = False
             self.closeOverlay.emit()
             return
         if key == 'enter':
-            self.openOverlay.emit()    
+            self.typing = not self.typing
+            if self.typing: self.openOverlay.emit()
 
 def main():
     app = QApplication(sys.argv)
