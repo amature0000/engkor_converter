@@ -60,6 +60,8 @@ class OverlayWindow(QWidget):
         text = self.input.text()
         self.input.clear()
         self.hide()
-        if not text: return
-
+        if not text: 
+            utils.simulate_key_process('esc') # esc 키 전달
+            return
+        
         self.textSubmitted.emit(text) # 텍스트 전달
