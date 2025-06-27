@@ -1,7 +1,8 @@
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtWidgets import QWidget, QLineEdit, QVBoxLayout, QSizePolicy
+from PyQt5.QtWidgets import QWidget, QLineEdit, QVBoxLayout, QSizePolicy, QApplication
 from PyQt5.QtGui import QFont
 import utils
+from time import sleep
 
 class OverlayWindow(QWidget):
     textSubmitted = pyqtSignal(str)
@@ -29,7 +30,7 @@ class OverlayWindow(QWidget):
         self.input.setFont(font)
         self.input.setPlaceholderText("")
         self.input.setFocusPolicy(Qt.StrongFocus)
-        self.input.returnPressed.connect(self.process_message)
+        #self.input.returnPressed.connect(self.process_message)
         self.input.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         
         layout = QVBoxLayout(self)
@@ -40,6 +41,7 @@ class OverlayWindow(QWidget):
         """
         창 열고 포커스 설정
         """
+        sleep(0.001)
         self.input.clear()
         self.show()
         utils.simulate_key_process("alt") # 포커스 뺏어오기
@@ -57,9 +59,15 @@ class OverlayWindow(QWidget):
         """
         창 닫고 텍스트 전달
         """
+        self.input.clearFocus()
+        QApplication.processEvents()
+        self.input.setFocus()
+        QApplication.processEvents()
+
         text = self.input.text()
         self.input.clear()
         self.hide()
+        sleep(0.001)
         if not text: 
             utils.simulate_key_process('esc') # esc 키 전달
             return

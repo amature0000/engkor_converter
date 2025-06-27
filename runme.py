@@ -8,11 +8,13 @@ import sys
 class Controller(QObject):
     openOverlay = pyqtSignal()
     closeOverlay = pyqtSignal()
+    processOverlay = pyqtSignal()
 
     def __init__(self, overlay: OverlayWindow):
         super().__init__()
         self.openOverlay.connect(overlay.show_message)
         self.closeOverlay.connect(overlay.exit_message)
+        self.processOverlay.connect(overlay.process_message)
         self.typing = False
 
     def on_key_press(self, key):
@@ -22,7 +24,10 @@ class Controller(QObject):
             return
         if key == 'enter':
             self.typing = not self.typing
-            if self.typing: self.openOverlay.emit()
+            if self.typing: 
+                self.openOverlay.emit()
+            else:
+                self.processOverlay.emit()
 
 def main():
     app = QApplication(sys.argv)
@@ -35,7 +40,7 @@ def main():
     overlay.textSubmitted.connect(utils.process_and_insert)
 
     controller = Controller(overlay)
-    keyboard.on_press(lambda e: controller.on_key_press(e.name))
+    keyboard.on_release(lambda e: controller.on_key_press(e.name))
     app.aboutToQuit.connect(keyboard.unhook_all)
 
     sys.exit(app.exec_())
