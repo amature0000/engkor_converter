@@ -47,18 +47,20 @@ class OverlayWindow(QWidget):
         utils.simulate_key_process("alt") # 포커스 뺏어오기
         self.input.activateWindow()
 
-    def exit_message(self):
+    def exit_message(self, chain=True):
         """
         창 닫기
         """
         self.input.clear()
         self.hide()
-        utils.simulate_key_process('esc') # esc 키 전달
+        if chain:
+            utils.simulate_key_process('esc') # esc 키 전달
 
     def process_message(self):
         """
         창 닫고 텍스트 전달
         """
+        if not self.input.isVisible(): return
         self.input.clearFocus()
         QApplication.processEvents()
         self.input.setFocus()

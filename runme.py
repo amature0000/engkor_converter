@@ -7,7 +7,7 @@ import sys
 
 class Controller(QObject):
     openOverlay = pyqtSignal()
-    closeOverlay = pyqtSignal()
+    closeOverlay = pyqtSignal(bool)
     processOverlay = pyqtSignal()
 
     def __init__(self, overlay: OverlayWindow):
@@ -20,8 +20,10 @@ class Controller(QObject):
     def on_key_press(self, key):
         if key == 'esc' and self.typing:
             self.typing = False
-            self.closeOverlay.emit()
+            self.closeOverlay.emit(True)
             return
+        if key == '\\' and self.typing:
+            self.closeOverlay.emit(False)
         if key == 'enter':
             self.typing = not self.typing
             if self.typing: 
