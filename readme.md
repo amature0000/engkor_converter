@@ -19,22 +19,13 @@
     ```
 3. 실행파일(.exe) 생성:
     ```
-    pyinstaller --onefile --icon=favicon.ico runme.py
+    pyinstaller --icon=favicon.ico runme.py
     ```
-    
 
-### 다운로드
-[릴리즈 보러 가기](https://github.com/amature0000/engkor_converter/releases)
-### 주의: 몇몇 보안 프로그램에서 다운로드 파일을 바이러스로 탐지합니다. 이는 오탐지이며, 직접 소스코드 설치를 통해 실행파일을 생성할 수 있습니다.
+## 레거시 브랜치
+해당 브랜치는 ver 3에 대한 브랜치입니다.
 
 ## related work
 - [(tistory)한글 키보드 입력 변환하기](https://mizykk.tistory.com/115): 알파벳 스트링을 한글 문장으로 변환하는 파이썬 코드 설명
 - [helldivers2_helper](https://github.com/rubystarashe/helldivers2_helper): 한글 채팅을 포함해 다양한 기능을 지원하는 헬다이버즈2 매니저 프로그램
 - [dead_by_unicode_gui](https://github.com/Codex-in-somnio/dead_by_unicode_gui): 가상 키보드를 활용해 사용자 입력을 모니터링하고 출력하는 프로그램
-
-## 동작화면
-
-![img](for_readme/1.png)
-![img](for_readme/2.png)
-![img](for_readme/3.png)
-![img](for_readme/4.png)
