@@ -1,9 +1,4 @@
-import keyboard
-from overlay import OverlayWindow
-from json import load
-from time import sleep
 from eng_kor_converter import engkor
-from exec_once import print_latest_release
 
 CONFIG_FILE = 'config.json'
 # shift keys
@@ -11,48 +6,44 @@ SHIFT_KEYS = {'R', 'E', 'Q', 'T', 'W', 'O', 'P'}
 
 class State:
     def __init__(self):
-        self.typing = False
         self.mode = True # True: kor, False: eng
+        self.engkor_key = ['right alt', 'alt']
         self.fixed_keys = ''
         self.korean_keys = []
-        self.start_key = 'enter'
-        self.end_key = '\\'
-        self.exit_key = 'esc'
-        self.engkor_key = ['right alt', 'alt']
-        # chatbox
-        hud_size = 0.9
-        offset_x = 79.35
-        offset_y = 88.5
-        # do_update
-        do_update = True
-        try:
-            with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
-                config = load(f)
-                hud_size = float(config.get('hud_size', hud_size))
-                do_update = bool(config.get('get_latest_update', do_update))
-        except Exception: pass
-
-        # logistic regression
-        offset_x = -22.90 * hud_size + 99.93
-        offset_y = -12.50 * hud_size + 99.78
-        
-        self.overlay = OverlayWindow(offset_x, offset_y, hud_size)
-        
-        print("https://github.com/amature0000/engkor_converter")
-        if do_update: print_latest_release()
     # ==============================================================================================
-    def clear(self, show_overlay=False):
+    def record(self, text):
+        if text in self.engkor_key:
+            self.mode = not self.mode
+        elif text == 'backspace':
+            self.backspace()
+        elif text == 'space':
+            self.insert(' ')
+        elif len(text) == 1:
+            self.insert(text)
+
+    def process(self):
+        temp_str = self.eng_to_kor()
+        temp_string = self.fixed_keys
+        if temp_str: temp_string += temp_str
+        if not temp_string: 
+            temp_string = 'Press \"\\\" key to send the message'
+            if self.mode: temp_string = '전송하려면 \"\\\" 키 입력'
+        return temp_string
+    
+    def extract(self):
+        self.eng_to_kor(True)
+        temp = self.fixed_keys
+        return temp
+    
+    def clear(self):
         self.fixed_keys = ''
         self.korean_keys.clear()
-        if show_overlay: self.show_overlay()
-        else: self.overlay.root.withdraw() # hide overlay
-        
+    # ==============================================================================================        
     def backspace(self):
         if len(self.korean_keys) > 0:
             self.korean_keys.pop()
         else:
             self.fixed_keys = self.fixed_keys[:-1]
-        self.show_overlay()
 
     def insert(self, word:str):
         if self.mode:
@@ -61,47 +52,16 @@ class State:
         else:
             self.eng_to_kor(True)
             self.fixed_keys = self.fixed_keys + word
-        self.show_overlay()
 
-    def eng_to_kor(self, collapse = False): # if collapse: return None
+    def eng_to_kor(self, collapse = False):
         if len(self.korean_keys) == 0: return ''
         temp_korean_keys = ''.join(self.korean_keys)
-        if collapse:
-            fixed_str = engkor(temp_korean_keys, collapse)
-            self.fixed_keys += fixed_str
-            self.korean_keys.clear()
-            return
-        fixed_str, temp_str, split_index = engkor(temp_korean_keys)
+        fixed_str, temp_str, split_index = engkor(temp_korean_keys, collapse)
         self.fixed_keys += fixed_str
-        self.korean_keys = self.korean_keys[split_index:]
+
+        if collapse: self.korean_keys.clear()
+        else: self.korean_keys = self.korean_keys[split_index:]
         return temp_str
-    # ==============================================================================================   
-    def show_overlay(self):
-        temp_str = self.eng_to_kor()
-        temp_string = self.fixed_keys
-        if temp_str: temp_string += temp_str
-        if not temp_string: 
-            temp_string = 'Press \"\\\" key to send the message'
-            if self.mode: temp_string = '전송하려면 \"\\\" 키 입력'
-        self.overlay.show_message(temp_string)
-    # ==============================================================================================
-    def process_and_insert(self):
-        self.eng_to_kor(True)
-        # 기존 입력 삭제
-        keyboard.press('esc')
-        sleep(0.05)
-        keyboard.release('esc')
-        keyboard.press('enter')
-        sleep(0.05)
-        keyboard.release('enter')
-        # 한글 문자열 타이핑
-        if len(self.fixed_keys) > 0:
-            sleep(0.1)
-            keyboard.write(self.fixed_keys, delay=0.01)
-        # 텍스트 전송
-        keyboard.press('enter')
-        sleep(0.05)
-        keyboard.release('enter')
 
 """
 선형회귀 데이터

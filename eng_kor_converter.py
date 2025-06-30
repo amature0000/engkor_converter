@@ -26,7 +26,7 @@ CONS_DOUBLE = {
 
 # =============================================================================
 # caller must check if len(text) == 0
-def engkor(text, collapse = False): # if collapse: return str
+def engkor(text, collapse = False):
     result = []   # 영 > 한 변환 결과
     
     # 1. 해당 글자가 자음인지 모음인지 확인
@@ -71,7 +71,7 @@ def engkor(text, collapse = False): # if collapse: return str
     result_1 = ''
     result_2 = join_jamos(''.join(result))
     split_index = 0
-    if collapse: return result_2
+    if collapse: return result_2, None, None
     elif len(result_2) == 2:
         result_1 = result_2[0]
         result_2 = result_2[1]

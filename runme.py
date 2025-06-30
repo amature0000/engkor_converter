@@ -1,48 +1,52 @@
 import keyboard
 from state import State
+import utils
+from overlay import OverlayWindow
+class EventHandler:
+    def __init__(self, overlay:OverlayWindow, state:State):
+        self.overlay = overlay
+        self.state = state
 
-def on_key_press(event, state: State):
-    if not state.overlay.root.winfo_exists():
-        keyboard.unhook_all()
-        exit()
-    """command process"""
-    if event.name == state.start_key:
-        state.typing = not state.typing
-        if state.typing: state.typing = True
-        else: state.typing = False
-        state.clear(state.typing)
-        return
-    elif event.name == state.end_key:
-        if not state.typing: return
-        state.process_and_insert()
-        state.typing = False
-        state.clear()
-        return
-    elif event.name == state.exit_key:
-        state.typing = False
-        state.clear()
-        return
-    if not state.typing:
-        return
-    
-    """typing process"""
-    if event.name in state.engkor_key:
-        # 유저 편의성을 위해 채팅창이 켜져 있는 동안만 한/영 동작
-        state.mode = not state.mode
-        state.show_overlay()
-        return
-    event_len = len(event.name)
-    if event.name == 'backspace':
-        state.backspace()
-    elif event.name == 'space':
-        state.insert(' ')
-    elif event_len == 1:
-        state.insert(event.name)
+        self.typing = False
+        self.start_key = 'enter'
+        self.end_key = '\\'
+        self.exit_key = 'esc'
+
+    def on_key_press(self, event):
+        if not self.overlay.root.winfo_exists():
+            keyboard.unhook_all()
+            exit()
+        """command process"""
+        if event == self.start_key:
+            self.typing = not self.typing
+            self.state.clear()
+        elif event == self.end_key and self.typing:
+            utils.process_and_insert(self.state.extract())
+            self.typing = False
+            self.state.clear()
+        elif event == self.exit_key:
+            self.typing = False
+            self.state.clear()
+        if not self.typing:
+            self.overlay.root.withdraw()
+            return
+        
+        """typing process"""
+        self.state.record(event)
+        self.overlay.show_message(self.state.process())
 
 def main():
+    rect = (-1, -1, 2561, 1441)
+    # rect = utils.get_window_rect()
+    hud_size = utils.read_json()
+
+    overlay = OverlayWindow(hud_size, rect)
     state = State()
-    keyboard.on_press(lambda event: on_key_press(event, state))
-    state.overlay.mainloop()
+
+    e = EventHandler(overlay, state)
+    keyboard.on_press(lambda event: e.on_key_press(event.name))
+
+    overlay.mainloop()
 
 if __name__ == "__main__":
     main()
