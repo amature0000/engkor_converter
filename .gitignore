@@ -2,7 +2,10 @@ __pycache__/
 venv/
 *build/
 *dist/
+python_embed/
+Output/
 
+*.iss
 *.spec
 *.log
 *.exe
