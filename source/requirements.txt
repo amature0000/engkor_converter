@@ -1,5 +1,4 @@
 hangul-utils==0.2
 keyboard==0.13.5
-pyinstaller==6.11.1
 requests
 pywin32
