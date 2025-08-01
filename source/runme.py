@@ -44,8 +44,8 @@ class EventHandler:
         self.overlay.show_message(self.state.process())
 
 def main():
-    rect = (-1, -1, 2561, 1441)
-    # rect = utils.get_window_rect()
+    # rect = (-1, -1, 2561, 1441)
+    rect = utils.get_window_rect()
     hud_size = utils.read_json()
 
     overlay = OverlayWindow(hud_size, rect)
