@@ -2,9 +2,15 @@ import re
 from win32gui import FindWindow, GetWindowRect
 from time import sleep
 import keyboard
-from os import system
+import os
 from requests import get
 from json import load
+from pathlib import Path
+import json
+
+appdata = Path(os.environ.get("APPDATA", "")) / "EKconverter"
+appdata.mkdir(exist_ok=True)
+cfg = appdata / 'config.json'
 
 def simulate_key_process(key):
     sleep(0.05)
@@ -31,11 +37,11 @@ def get_window_rect():
     while (hwnd:=FindWindow(None, game_title)) == 0:
         print('.')
         sleep(1)
-    system('cls')
+    os.system('cls')
     return GetWindowRect(hwnd)
 
 def print_latest_release():
-    version = "4.1"
+    version = "v4.2"
     owner = "amature0000"
     repo = "engkor_converter"
     global print_latest_release
@@ -58,22 +64,26 @@ def print_latest_release():
         print(f'\n\n신규 릴리즈가 있습니다! (현재 버전){version} -> (최신 버전){latest_version}\n\n수정사항:\n{release_notes}')
 
 def read_json():
-    config_file = 'config.json'
     global read_json
     read_json = None
     hud_size = 0.9
     do_update = True
     try:
-        with open(config_file, 'r', encoding='utf-8') as f:
+        with open(cfg, 'r', encoding='utf-8') as f:
             config = load(f)
             hud_size = float(config.get('hud_size', 0.9))
             do_update = bool(config.get('get_latest_update', True))
     except Exception: pass
     print("https://github.com/amature0000/engkor_converter")
+    print("Home 키를 눌러 설정값 수정")
     if do_update: print_latest_release()
-
     return hud_size
 
+def save_json(hud, update):
+    print(hud)
+    print(update)
+    with open(cfg, 'w') as f:
+        json.dump({'hud_size': hud, 'get_latest_update': update}, f)
 
 """
 선형회귀 데이터

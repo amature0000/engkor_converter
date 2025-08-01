@@ -1,8 +1,9 @@
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtWidgets import QWidget, QLineEdit, QVBoxLayout, QSizePolicy, QApplication
+from PyQt5.QtWidgets import QWidget, QLineEdit, QVBoxLayout, QSizePolicy, QApplication, QInputDialog, QMessageBox, QLabel, QDialog, QCheckBox, QPushButton
 from PyQt5.QtGui import QFont
 import utils
 from time import sleep
+import sys
 
 class OverlayWindow(QWidget):
     textSubmitted = pyqtSignal(str)
@@ -75,3 +76,54 @@ class OverlayWindow(QWidget):
             return
         
         self.textSubmitted.emit(text) # 텍스트 전달
+    
+    def change_settings(self):
+        # hud_size = input("인 게임 HUD SIZE를 입력하세요 : ")
+        # check_update = input("EKconverter의 업데이트 소식을 받으시겠습니까?(y/n) : ")
+        # if check_update == 'y': check_update = True
+        # else: check_update = False
+        # utils.save_json(hud_size, check_update)
+        dialog = CustomInputDialog()
+            
+        dialog.activateWindow()
+        dialog.raise_()
+
+        if dialog.exec_() == QDialog.Accepted:
+            hud_size, check_update = dialog.getValues()
+            
+            if not hud_size.strip():
+                QMessageBox.warning(None, "입력 오류", "HUD SIZE를 입력해주세요.")
+                return
+            
+            utils.save_json(hud_size, check_update)
+            sys.exit()
+        else:
+            QMessageBox.information(None, "취소됨", "설정이 취소되었습니다.")
+
+class CustomInputDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.setWindowTitle("설정 입력")
+        self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
+        
+        layout = QVBoxLayout()
+
+        # 첫 번째 값: HUD Size
+        layout.addWidget(QLabel("인 게임 HUD SIZE를 입력하세요:"))
+        self.hud_input = QLineEdit()
+        layout.addWidget(self.hud_input)
+
+        # 두 번째 값: 업데이트 체크 여부
+        self.update_checkbox = QCheckBox("EKconverter의 업데이트 소식을 받으시겠습니까?")
+        layout.addWidget(self.update_checkbox)
+
+        # 확인 버튼
+        btn_ok = QPushButton("확인")
+        btn_ok.clicked.connect(self.accept)
+        layout.addWidget(btn_ok)
+
+        self.setLayout(layout)
+
+    def getValues(self):
+        return self.hud_input.text(), self.update_checkbox.isChecked()

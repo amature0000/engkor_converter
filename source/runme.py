@@ -1,7 +1,7 @@
 import keyboard
 from overlay import OverlayWindow
 from PyQt5.QtCore import QObject, pyqtSignal
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QInputDialog, QMessageBox
 import utils
 import sys
 
@@ -9,12 +9,15 @@ class Controller(QObject):
     openOverlay = pyqtSignal()
     closeOverlay = pyqtSignal(bool)
     processOverlay = pyqtSignal()
+    settingsSignal = pyqtSignal()
 
     def __init__(self, overlay: OverlayWindow):
         super().__init__()
         self.openOverlay.connect(overlay.show_message)
         self.closeOverlay.connect(overlay.exit_message)
         self.processOverlay.connect(overlay.process_message)
+        self.settingsSignal.connect(overlay.change_settings)
+
         self.typing = False
 
     def on_key_press(self, key):
@@ -23,7 +26,9 @@ class Controller(QObject):
             self.closeOverlay.emit(True)
             return
         if key == '\\' and self.typing:
-            self.closeOverlay.emit(False)
+                self.closeOverlay.emit(False)
+        if key == 'home':
+            self.settingsSignal.emit()
         if key == 'enter':
             self.typing = not self.typing
             if self.typing: 
