@@ -4,7 +4,8 @@ from os import system
 import keyboard
 import re
 from requests import get
-from json import load
+import json
+import sys
 
 def simulate_key_process(key):
     keyboard.press(key)
@@ -65,7 +66,7 @@ def read_json():
     do_update = True
     try:
         with open(config_file, 'r', encoding='utf-8') as f:
-            config = load(f)
+            config = json.load(f)
             hud_size = float(config.get('hud_size', 0.9))
             do_update = bool(config.get('get_latest_update', True))
     except Exception: pass
@@ -73,3 +74,9 @@ def read_json():
     if do_update: _print_latest_release()
 
     return hud_size
+
+def save_json(hud, update):
+    print(hud)
+    print(update)
+    with open('config.json', 'w') as f:
+        json.dump({'hud_size': hud, 'get_latest_update': update}, f)

@@ -2,6 +2,7 @@ import keyboard
 from state import State
 import utils
 from overlay import OverlayWindow
+import sys
 class EventHandler:
     def __init__(self, overlay:OverlayWindow, state:State):
         self.overlay = overlay
@@ -11,12 +12,19 @@ class EventHandler:
         self.start_key = 'enter'
         self.end_key = '\\'
         self.exit_key = 'esc'
+        self.settings_key = 'home'
 
     def on_key_press(self, event):
-        if not self.overlay.root.winfo_exists():
-            keyboard.unhook_all()
-            exit()
         """command process"""
+        if event == self.settings_key:
+            hud_size = input("인 게임 HUD SIZE를 입력하세요 : ")
+            check_update = input("EKconverter의 업데이트 소식을 받으시겠습니까?(y/n) : ")
+            if check_update == 'y': check_update = True
+            else: check_update = False
+            utils.save_json(hud_size, check_update)
+            keyboard.unhook_all()
+            self.overlay.root.destroy()
+            
         if event == self.start_key:
             self.typing = not self.typing
             self.state.clear()
