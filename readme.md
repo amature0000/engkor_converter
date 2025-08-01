@@ -4,24 +4,6 @@
 
 이 프로그램은 HELLDIVERS™ 2 인게임 채팅에 활용됩니다. 소스코드를 수정하여 다른 게임에 응용할 수 있습니다.
 
-## 소스코드 및 다운로드
-- Python 3.10 (권장)
-### 소스코드 설치
-1. 레포지토리 클론
-    ```
-    git clone https://github.com/amature0000/engkor_converter.git
-    ```
-2. 해당 디렉토리로 이동 후 요구 패키지 설치
-    ```
-    pip install -r requirements.txt
-    pip install requests
-    pip install pywin32
-    ```
-3. 실행파일(.exe) 생성:
-    ```
-    pyinstaller --icon=favicon.ico runme.py
-    ```
-
 ## 레거시 브랜치
 해당 브랜치는 ver 3에 대한 브랜치입니다.
 
