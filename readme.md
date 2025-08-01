@@ -8,6 +8,7 @@
 해당 브랜치는 ver 3에 대한 브랜치입니다.
 
 ## related work
-- [(tistory)한글 키보드 입력 변환하기](https://mizykk.tistory.com/115): 알파벳 스트링을 한글 문장으로 변환하는 파이썬 코드 설명
+- [(tistory)한글 키보드 입력 변환하기](https://mizykk.tistory.com/115): 알파벳 스트링을 한글 문장으로 변환하는 파이썬 코드
 - [helldivers2_helper](https://github.com/rubystarashe/helldivers2_helper): 한글 채팅을 포함해 다양한 기능을 지원하는 헬다이버즈2 매니저 프로그램
 - [dead_by_unicode_gui](https://github.com/Codex-in-somnio/dead_by_unicode_gui): 가상 키보드를 활용해 사용자 입력을 모니터링하고 출력하는 프로그램
+- [tkinter in Windows embeddable package](https://www.sysnet.pe.kr/2/0/13922?pageno=3): 임베디드 파이썬에 tkinter 라이브러리 설치
