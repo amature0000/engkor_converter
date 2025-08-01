@@ -72,7 +72,7 @@ def read_json():
     except Exception: pass
     print("https://github.com/amature0000/engkor_converter")
     if do_update: _print_latest_release()
-
+    print("Home 키를 눌러 설정값 수정")
     return hud_size
 
 def save_json(hud, update):
