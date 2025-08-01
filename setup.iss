@@ -14,7 +14,7 @@ Source: "source\*";       DestDir: "{app}\source"; Flags: recursesubdirs
 Source: "tk_embed\tcl\*"; DestDir: "{app}\python\tcl"; Flags: recursesubdirs
 Source: "tk_embed\DLLs\*"; DestDir: "{app}\python\DLLs"; Flags: recursesubdirs
 Source: "tk_embed\tkinter\*"; DestDir: "{app}\python\Lib\tkinter"; Flags: recursesubdirs
-
+Source: "source\config.json"; DestDir: "{userappdata}\EKconverter"; Flags: recursesubdirs
 
 [Run]
 ; 1) pip 설치
