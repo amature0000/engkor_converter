@@ -1,4 +1,4 @@
-keyboard
+hangul-utils==0.2
+keyboard==0.13.5
 requests
 pywin32
-pyqt5

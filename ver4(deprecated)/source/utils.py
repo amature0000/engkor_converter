@@ -1,31 +1,32 @@
+import re
 from win32gui import FindWindow, GetWindowRect
 from time import sleep
-import os
 import keyboard
-import re
+import os
 from requests import get
-import json
+from json import load
 from pathlib import Path
+import json
 
 appdata = Path(os.environ.get("APPDATA", "")) / "EKconverter"
 appdata.mkdir(exist_ok=True)
 cfg = appdata / 'config.json'
 
 def simulate_key_process(key):
+    sleep(0.05)
     keyboard.press(key)
     sleep(0.05)
     keyboard.release(key)
-    sleep(0.05)
 
 def process_and_insert(text):
-    simulate_key_process('esc')
-    if not text: return
-
     # 한글 문자열 타이핑
-    simulate_key_process('enter')
+    sleep(0.05)
     keyboard.write(text, delay=0.01)
-    sleep(0.01)
     simulate_key_process('enter')
+    # sleep(0.05)
+    # keyboard.press('enter')
+    # sleep(0.05)
+    # keyboard.release('enter')
 
 def get_window_rect():
     game_title = "HELLDIVERS™ 2"
@@ -39,12 +40,12 @@ def get_window_rect():
     os.system('cls')
     return GetWindowRect(hwnd)
 
-def _print_latest_release():
-    version = "(legacy)ver 3"
+def print_latest_release():
+    version = "v4.2"
     owner = "amature0000"
     repo = "engkor_converter"
-    global _print_latest_release
-    _print_latest_release = None
+    global print_latest_release
+    print_latest_release = None
 
     url = f"https://api.github.com/repos/{owner}/{repo}/releases/latest"
     response = get(url)
@@ -60,7 +61,7 @@ def _print_latest_release():
         release_notes = re.sub(r'^.*## 변경사항', '', release_notes, flags=re.DOTALL)
         release_notes = re.sub(r'## 다운로드 파일.*$', '', release_notes, flags=re.DOTALL)
         release_notes = release_notes.strip()
-        print(f'\n\n(현재 버전){version} -> (최신 버전){latest_version}\n\n수정사항:\n{release_notes}')
+        print(f'\n\n신규 릴리즈가 있습니다! (현재 버전){version} -> (최신 버전){latest_version}\n\n수정사항:\n{release_notes}')
 
 def read_json():
     global read_json
@@ -69,13 +70,13 @@ def read_json():
     do_update = True
     try:
         with open(cfg, 'r', encoding='utf-8') as f:
-            config = json.load(f)
+            config = load(f)
             hud_size = float(config.get('hud_size', 0.9))
             do_update = bool(config.get('get_latest_update', True))
     except Exception: pass
     print("https://github.com/amature0000/engkor_converter")
-    if do_update: _print_latest_release()
     print("Home 키를 눌러 설정값 수정")
+    if do_update: print_latest_release()
     return hud_size
 
 def save_json(hud, update):
@@ -83,3 +84,23 @@ def save_json(hud, update):
     print(update)
     with open(cfg, 'w') as f:
         json.dump({'hud_size': hud, 'get_latest_update': update}, f)
+
+"""
+선형회귀 데이터
+
+# ratio HUD = 0.75
+OFFSET_X = 82.75
+OFFSET_Y = 90.4
+
+# ratio HUD = 0.8
+OFFSET_X = 81.65
+OFFSET_Y = 89.75
+
+# ratio HUD = 0.85
+OFFSET_X = 80.4
+OFFSET_Y = 89.2
+
+# ratio HUD = 0.9
+OFFSET_X = 79.35
+OFFSET_Y = 88.5
+"""

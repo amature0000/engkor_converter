@@ -1,0 +1,11 @@
+__pycache__/
+venv/
+*build/
+*dist/
+python_embed/
+tk_embed/
+Output/
+
+*.spec
+*.log
+*.exe

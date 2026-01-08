@@ -1,6 +1,6 @@
 [Setup]
 AppName=EKconverter
-AppVersion=1.0.0
+AppVersion=4.0.0
 DefaultDirName={pf}\EKconverter
 DefaultGroupName=EKconverter
 OutputBaseFilename=EKconverterSetup
@@ -11,9 +11,6 @@ PrivilegesRequired=admin
 [Files]
 Source: "python_embed\*"; DestDir: "{app}\python"; Flags: recursesubdirs
 Source: "source\*";       DestDir: "{app}\source"; Flags: recursesubdirs
-Source: "tk_embed\tcl\*"; DestDir: "{app}\python\tcl"; Flags: recursesubdirs
-Source: "tk_embed\DLLs\*"; DestDir: "{app}\python\DLLs"; Flags: recursesubdirs
-Source: "tk_embed\tkinter\*"; DestDir: "{app}\python\Lib\tkinter"; Flags: recursesubdirs
 Source: "source\config.json"; DestDir: "{userappdata}\EKconverter"; Flags: recursesubdirs
 
 [Run]

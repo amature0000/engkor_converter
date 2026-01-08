@@ -1,56 +1,60 @@
 import keyboard
-from overlay import OverlayWindow
-from PyQt5.QtCore import QObject, pyqtSignal
-from PyQt5.QtWidgets import QApplication, QInputDialog, QMessageBox
+from state import State
 import utils
+from overlay import OverlayWindow
 import sys
-
-class Controller(QObject):
-    openOverlay = pyqtSignal()
-    closeOverlay = pyqtSignal(bool)
-    processOverlay = pyqtSignal()
-    settingsSignal = pyqtSignal()
-
-    def __init__(self, overlay: OverlayWindow):
-        super().__init__()
-        self.openOverlay.connect(overlay.show_message)
-        self.closeOverlay.connect(overlay.exit_message)
-        self.processOverlay.connect(overlay.process_message)
-        self.settingsSignal.connect(overlay.change_settings)
+class EventHandler:
+    def __init__(self, overlay:OverlayWindow, state:State):
+        self.overlay = overlay
+        self.state = state
 
         self.typing = False
+        self.start_key = 'enter'
+        self.end_key = '\\'
+        self.exit_key = 'esc'
+        self.settings_key = 'home'
 
-    def on_key_press(self, key):
-        if key == 'esc' and self.typing:
-            self.typing = False
-            self.closeOverlay.emit(True)
-            return
-        if key == '\\' and self.typing:
-                self.closeOverlay.emit(False)
-        if key == 'home':
-            self.settingsSignal.emit()
-        if key == 'enter':
+    def on_key_press(self, event):
+        """command process"""
+        if event == self.settings_key:
+            hud_size = input("인 게임 HUD SIZE를 입력하세요 : ")
+            check_update = input("EKconverter의 업데이트 소식을 받으시겠습니까?(y/n) : ")
+            if check_update == 'y': check_update = True
+            else: check_update = False
+            utils.save_json(hud_size, check_update)
+            keyboard.unhook_all()
+            self.overlay.root.destroy()
+            
+        if event == self.start_key:
             self.typing = not self.typing
-            if self.typing: 
-                self.openOverlay.emit()
-            else:
-                self.processOverlay.emit()
+            self.state.clear()
+        elif event == self.end_key and self.typing:
+            utils.process_and_insert(self.state.extract())
+            self.typing = False
+            self.state.clear()
+        elif event == self.exit_key:
+            self.typing = False
+            self.state.clear()
+        if not self.typing:
+            self.overlay.root.withdraw()
+            return
+        
+        """typing process"""
+        self.state.record(event)
+        self.overlay.show_message(self.state.process())
 
 def main():
-    app = QApplication(sys.argv)
-
     # rect = (-1, -1, 2561, 1441)
-    rect = utils.get_window_rect()  # 실제 윈도우 크기 가져올 때 사용
+    rect = utils.get_window_rect()
     hud_size = utils.read_json()
 
     overlay = OverlayWindow(hud_size, rect)
-    overlay.textSubmitted.connect(utils.process_and_insert)
+    state = State()
 
-    controller = Controller(overlay)
-    keyboard.on_release(lambda e: controller.on_key_press(e.name))
-    app.aboutToQuit.connect(keyboard.unhook_all)
+    e = EventHandler(overlay, state)
+    keyboard.on_press(lambda event: e.on_key_press(event.name))
 
-    sys.exit(app.exec_())
+    overlay.mainloop()
 
 if __name__ == "__main__":
     main()
