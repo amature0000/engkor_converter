@@ -9,6 +9,7 @@
 버전3에 비해 낮은 성능과 버그가 많다고 판단되어 버전4 프로젝트를 중지했습니다.
 
 ## related work
-- [(tistory)한글 키보드 입력 변환하기](https://mizykk.tistory.com/115): 알파벳 스트링을 한글 문장으로 변환하는 파이썬 코드
-- [helldivers2_helper](https://github.com/rubystarashe/helldivers2_helper): 한글 채팅을 포함해 다양한 기능을 지원하는 헬다이버즈2 매니저 프로그램
-- [dead_by_unicode_gui](https://github.com/Codex-in-somnio/dead_by_unicode_gui): 가상 키보드를 활용해 사용자 입력을 모니터링하고 출력하는 프로그램
+- [한글 키보드 입력 변환](https://mizykk.tistory.com/115)
+- [embeddable pakage에서 tkinter 사용](https://www.sysnet.pe.kr/2/0/13922?pageno=3)
+- [helldivers2_helper](https://github.com/rubystarashe/helldivers2_helper)
+- [dead_by_unicode_gui](https://github.com/Codex-in-somnio/dead_by_unicode_gui)
