@@ -18,10 +18,7 @@ class EventHandler:
         """command process"""
         if event == self.settings_key:
             hud_size = input("인 게임 HUD SIZE를 입력하세요 : ")
-            check_update = input("EKconverter의 업데이트 소식을 받으시겠습니까?(y/n) : ")
-            if check_update == 'y': check_update = True
-            else: check_update = False
-            utils.save_json(hud_size, check_update)
+            utils.save_json(hud_size)
             keyboard.unhook_all()
             self.overlay.root.destroy()
             
