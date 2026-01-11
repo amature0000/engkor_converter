@@ -2,7 +2,7 @@ import keyboard
 from state import State
 import utils
 from overlay import OverlayWindow
-import sys
+
 class EventHandler:
     def __init__(self, overlay:OverlayWindow, state:State):
         self.overlay = overlay

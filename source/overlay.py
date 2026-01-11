@@ -1,9 +1,6 @@
 import tkinter as tk
 import tkinter.font as tkFont
-from utils import get_window_rect
 
-# Game title
-GAME_TITLE = "HELLDIVERS™ 2"
 # ratio
 WIDTH_R = 18.75 #470
 HEIGHT_R = 3.9 #50

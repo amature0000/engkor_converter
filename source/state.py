@@ -64,7 +64,7 @@ class State:
         return temp_str
 
 """
-선형회귀 데이터
+선형회귀 데이터 
 
 # ratio HUD = 0.75
 OFFSET_X = 82.75
@@ -81,24 +81,4 @@ OFFSET_Y = 89.2
 # ratio HUD = 0.9
 OFFSET_X = 79.35
 OFFSET_Y = 88.5
-"""
-"""
-# from utils.py(legacy)
-def start_typing(self):
-    self.typing = True
-    self.clear(True)
-
-def end_typing(self):
-    if not self.typing: return
-    self.process_and_insert()
-    self.typing = False
-    self.clear()
-
-def exit_typing(self):
-    self.typing = False
-    self.clear()
-
-def chmod(self):
-    self.mode = not self.mode
-    self.show_overlay()
 """
