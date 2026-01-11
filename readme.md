@@ -1,7 +1,7 @@
 [![GitHub downloads](https://img.shields.io/github/downloads/amature0000/engkor_converter/total.svg?logo=github)](https://github.com/amature0000/engkor_converter/releases)
 # 영-한 문자열 변환 프로그램
 ## 소개
-### [사용법](https://github.com/amature0000/engkor_converter)
+### [사용법](https://reinvented-oak-967.notion.site/EK-converter-2e54a4ebe77b80859899e066f14a411a)
 이 프로그램은 HELLDIVERS™ 2 인게임 채팅에 활용됩니다. 키보드 입력을 모니터링하고, 인게임 채팅창을 대체하여 **한글 채팅**을 지원하는 채팅창을 디스플레이합니다.
 
 소스코드를 수정하여 다른 게임에 응용할 수 있습니다.
