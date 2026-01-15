@@ -8,6 +8,7 @@
 
 ## for modification
 소스코드를 수정해 다른 게임에 적용하는 예시입니다.
+
 - `utils.py`: `game_title`을 원하는 게임명으로 변경
 ```python
 # utils.py
@@ -34,6 +35,8 @@ HEIGHT_R = 3.9 #50
         offset_x = -22.90 * hud_size + 99.93
         offset_y = -12.50 * hud_size + 99.78
 ```
+
+소스코드 위치는 바탕화면의 `EKconverter` 우클릭 - 파일 위치 열기 - 상위 폴더(EKconverter)로 이동 후 source 폴더로 이동
 
 ## related work
 - [한글 키보드 입력 변환](https://mizykk.tistory.com/115)
