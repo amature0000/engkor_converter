@@ -7,6 +7,21 @@
 소스코드를 수정하여 다른 게임에 응용할 수 있습니다.
 
 ## for modification
+```mermaid
+flowchart LR
+
+    config.json -->|HUD SIZE| utils.py
+    utils.py -->|HUD SIZE, rect| runme.py
+    runme.py -->|HUD SIZE, rect| overlay.py
+    runme.py -->|key event, processed text| overlay.py
+    
+    runme.py -->|key event| state.py
+    state.py -->|raw data| engkor_converter.py
+    engkor_converter.py -->|processed text| state.py
+    state.py -->|processed text| runme.py
+    state.py -->|processed text| utils.py
+```
+
 소스코드를 수정해 다른 게임에 적용하는 예시입니다.
 
 - `utils.py`: `game_title`을 원하는 게임명으로 변경
