@@ -15,30 +15,31 @@ class EventHandler:
         self.settings_key = 'home'
 
     def on_key_press(self, event):
-        """command process"""
+        """setting process"""
         if event == self.settings_key:
             hud_size = input("인 게임 HUD SIZE를 입력하세요 : ")
             utils.save_json(hud_size)
             keyboard.unhook_all()
             self.overlay.root.destroy()
-            
+        
+        """command process"""
         if event == self.start_key:
             self.typing = not self.typing
             self.state.clear()
         elif event == self.end_key and self.typing:
-            utils.process_and_insert(self.state.extract())
+            utils.process_and_insert(self.state.process())
             self.typing = False
             self.state.clear()
         elif event == self.exit_key:
             self.typing = False
             self.state.clear()
+            
+        """typing process"""
         if not self.typing:
             self.overlay.root.withdraw()
             return
-        
-        """typing process"""
         self.state.record(event)
-        self.overlay.show_message(self.state.process())
+        self.overlay.show_message(self.state.process(True))
 
 def main():
     # rect = (-1, -1, 2561, 1441)

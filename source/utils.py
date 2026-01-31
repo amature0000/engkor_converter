@@ -47,7 +47,7 @@ def read_json():
             hud_size = float(config.get('hud_size', 0.9))
     except Exception: pass
     print("https://github.com/amature0000/engkor_converter")
-    print("EKconverter ver 3.14.1")
+    print("EKconverter ver 3.14.2")
     print("Home 키를 눌러 HUD 크기 변경")
     return hud_size
 
