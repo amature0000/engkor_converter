@@ -10,16 +10,16 @@
 ```mermaid
 flowchart LR
 
-    config.json -->|HUD SIZE| utils.py
-    utils.py -->|HUD SIZE, rect| runme.py
-    runme.py -->|HUD SIZE, rect| overlay.py
-    runme.py -->|key event, processed text| overlay.py
+    config.json -->|HUD SIZE| U[utils.py]
+    U -->|HUD SIZE, rect| M[runme.py]
+    M -->|HUD SIZE, rect| O[overlay.py]
+    M -->|key event, processed text| O
     
-    runme.py -->|key event| state.py
-    state.py -->|raw data| engkor_converter.py
-    engkor_converter.py -->|processed text| state.py
-    state.py -->|processed text| runme.py
-    state.py -->|processed text| utils.py
+    M -->|key event| S[state.py]
+    S -->|raw data| C[engkor_converter.py]
+    C -->|processed text| S
+    S -->|processed text| M
+    M -->|processed text| U
 ```
 
 소스코드를 수정해 다른 게임에 적용하는 예시입니다.
