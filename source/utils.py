@@ -65,7 +65,7 @@ def print_colors():
     try:
         for name in next(color_it): 
             r, g, b = ImageColor.getrgb(name)
-            print(f"RGB:({r:03d}, {g:03d}, {b:03d})\t\033[38;2;{r};{g};{b}m{name}\033[0m")
+            print(f"RGB:({r:02X}, {g:02X}, {b:02X})\t\033[38;2;{r};{g};{b}m{name}\033[0m")
         print(f"계속해서 보려면 End 키 입력")
     except StopIteration:
         print("모든 색상을 출력했습니다.")
