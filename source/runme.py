@@ -13,6 +13,7 @@ class EventHandler:
         self.end_key = '\\'
         self.exit_key = 'esc'
         self.settings_key = 'home'
+        self.color_table_key = 'end'
 
     def on_key_press(self, event):
         """setting process"""
@@ -21,6 +22,8 @@ class EventHandler:
             utils.save_json(hud_size)
             keyboard.unhook_all()
             self.overlay.root.destroy()
+        if event == self.color_table_key:
+            utils.print_colors()
         
         """command process"""
         if event == self.start_key:

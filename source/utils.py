@@ -5,7 +5,9 @@ import keyboard
 import json
 from pathlib import Path
 from PIL import ImageColor
+import colorama
 
+colorama.init()
 appdata = Path(os.environ.get("APPDATA", "")) / "EKconverter"
 appdata.mkdir(exist_ok=True)
 cfg = appdata / 'config.json'
@@ -53,7 +55,24 @@ def _convert_script(text: str):
             result.append(part)
 
     return "".join(result)
-    
+
+def color_iterator():
+    names = sorted(ImageColor.colormap.keys())
+    for i in range(0, len(names), 15): yield names[i:i+20]
+color_it = color_iterator()    
+
+def print_colors():    
+    try:
+        for name in next(color_it): 
+            r, g, b = ImageColor.getrgb(name)
+            print(f"\033[38;2;{r};{g};{b}m{name}\033[0m\tRGB:({r}, {g}, {b})")
+        print(f"계속해서 보려면 End 키 입력")
+    except StopIteration:
+        print("모든 색상을 출력했습니다.")
+
+print_colors()
+print_colors()
+
 def get_window_rect():
     game_title = "HELLDIVERS™ 2"
     global get_window_rect
@@ -78,6 +97,7 @@ def read_json():
     print("https://github.com/amature0000/engkor_converter")
     print("EKconverter ver 3.15.0")
     print("Home 키를 눌러 HUD 크기 변경")
+    print("End 키를 눌러 색상 테이블 보기")
     return hud_size
 
 def save_json(hud):
