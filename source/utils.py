@@ -52,7 +52,7 @@ def _convert_script(text: str):
         except ValueError:
             result.append(part)
 
-    return " ".join(result)
+    return "".join(result)
     
 def get_window_rect():
     game_title = "HELLDIVERS™ 2"
