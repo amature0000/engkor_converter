@@ -48,7 +48,7 @@ def _convert_script(text: str):
 
         try:
             hex6 = _tohex(color_name)
-            result.append(f"<c=00{hex6}>{content}")
+            result.append(f"<c=FF{hex6}>{content}")
         except ValueError:
             result.append(part)
 
