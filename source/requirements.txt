@@ -1,3 +1,4 @@
 py-hangul-utils==1.0.1
 keyboard==0.13.5
 pywin32==311
+pillow==11.3.0
