@@ -7,11 +7,22 @@ SHIFT_KEYS = {'R', 'E', 'Q', 'T', 'W', 'O', 'P'}
 class State:
     def __init__(self):
         self.mode = True # True: kor, False: eng
+        self.mode_ = True
+        self.color = False # True: typing, False: none
+
         self.engkor_key = ['right alt', 'alt']
         self.fixed_keys = ''
         self.korean_keys = []
     # ==============================================================================================
     def record(self, text):
+        if text == '#':
+            self.color = True
+            self.mode_ = self.mode
+            self.mode = False
+        if self.color and text == 'space':
+            self.color = False
+            self.mode = self.mode_
+
         if text in self.engkor_key:
             self.mode = not self.mode
         elif text == 'backspace':

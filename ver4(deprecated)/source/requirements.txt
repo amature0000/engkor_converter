@@ -1,4 +1,0 @@
-keyboard
-requests
-pywin32
-pyqt5

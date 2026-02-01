@@ -4,6 +4,7 @@ import os
 import keyboard
 import json
 from pathlib import Path
+from PIL import ImageColor
 
 appdata = Path(os.environ.get("APPDATA", "")) / "EKconverter"
 appdata.mkdir(exist_ok=True)
@@ -18,6 +19,7 @@ def simulate_key_process(key):
 def process_and_insert(text):
     simulate_key_process('esc')
     if not text: return
+    text = _convert_script(text)
 
     # 한글 문자열 타이핑
     simulate_key_process('enter')
@@ -25,6 +27,33 @@ def process_and_insert(text):
     sleep(0.01)
     simulate_key_process('enter')
 
+def _tohex(name):
+    r, g, b = ImageColor.getrgb(name)
+    return f"{r:02X}{g:02X}{b:02X}"
+
+def _convert_script(text: str):
+    parts = text.split("#")
+    if len(parts) == 1: return text
+    result = []
+
+    # 첫 문장이 #로 시작한다면 -> parts[0] == ""
+    if parts[0]:
+        result.append(parts[0])
+
+    for part in parts[1:]:
+        tokens = part.split(maxsplit=1)
+
+        color_name = tokens[0]
+        content = tokens[1] if len(tokens) > 1 else ""
+
+        try:
+            hex6 = _tohex(color_name)
+            result.append(f"<c=00{hex6}>{content}")
+        except ValueError:
+            result.append(part)
+
+    return " ".join(result)
+    
 def get_window_rect():
     game_title = "HELLDIVERS™ 2"
     global get_window_rect
@@ -47,7 +76,7 @@ def read_json():
             hud_size = float(config.get('hud_size', 0.9))
     except Exception: pass
     print("https://github.com/amature0000/engkor_converter")
-    print("EKconverter ver 3.14.2")
+    print("EKconverter ver 3.15.0")
     print("Home 키를 눌러 HUD 크기 변경")
     return hud_size
 
