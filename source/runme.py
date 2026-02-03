@@ -3,10 +3,12 @@ from state import State
 import utils
 from overlay import OverlayWindow
 
+
 class EventHandler:
     def __init__(self, overlay:OverlayWindow, state:State):
         self.overlay = overlay
         self.state = state
+        self.simplelock = False
 
         self.typing = False
         self.start_key = 'enter'
@@ -20,8 +22,7 @@ class EventHandler:
         if event == self.settings_key:
             hud_size = input("인 게임 HUD SIZE를 입력하세요 : ")
             utils.save_json(hud_size)
-            keyboard.unhook_all()
-            self.overlay.root.destroy()
+            self.overlay.resize()
         if event == self.color_table_key:
             utils.print_colors()
         
@@ -45,11 +46,7 @@ class EventHandler:
         self.overlay.show_message(self.state.process(True))
 
 def main():
-    # rect = (-1, -1, 2561, 1441)
-    rect = utils.get_window_rect()
-    hud_size = utils.read_json()
-
-    overlay = OverlayWindow(hud_size, rect)
+    overlay = OverlayWindow()
     state = State()
 
     e = EventHandler(overlay, state)

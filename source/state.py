@@ -36,8 +36,8 @@ class State:
         cursor = self._eng_to_kor()
         string = self.fixed_keys + cursor
         if placeholder and (not string): 
-            string = 'Press \"\\\" key to send the message'
-            if self.mode: string = '전송하려면 \"\\\" 키 입력'
+            string = '\"\\\" key to send'
+            if self.mode: string = '\"\\\" 키로 출력'
         return string
     
     def clear(self):
@@ -59,7 +59,7 @@ class State:
             self.fixed_keys += cursor + word
             self.korean_keys.clear()
 
-    # NOTE: 해당 함수는 내부에서 fixed_keys를 수정하므로, caller는 fixed_keys와 이 함수를 원자적으로 접근하면 안 됨
+    # NOTE: 해당 함수는 내부에서 fixed_keys를 수정하므로, caller는 fixed_keys 접근 이전에 이 함수를 호출해야 함.
     def _eng_to_kor(self):
         if len(self.korean_keys) == 0: return ''
         temp_korean_keys = ''.join(self.korean_keys)

@@ -11,15 +11,12 @@
 flowchart LR
 
     config.json -->|HUD SIZE| U[utils.py]
-    U -->|HUD SIZE, rect| M[runme.py]
-    M -->|HUD SIZE, rect| O[overlay.py]
+    U -->|HUD SIZE| O[overlay.py]
     
-    M -->|key event| S[state.py]
-    S -->|raw data| C[engkor_converter.py]
-    C -->|processed text| S
-    S -->|processed text| M
-    M -->|processed text| U
-    M -->|processed text| O
+    C[engkor_converter.py] -->|processed data| S
+    S[state.py] -->|processed data| M[runme.py]
+    M -->|processed data| O
+    M -->|processed data| U
 ```
 
 소스코드를 수정해 다른 게임에 적용하는 예시입니다.
@@ -56,6 +53,4 @@ HEIGHT_R = 3.9 #50
 ## related work
 - [한글 키보드 입력 변환](https://mizykk.tistory.com/115)
 - [embeddable pakage에서 tkinter 사용](https://www.sysnet.pe.kr/2/0/13922?pageno=3)
-- [helldivers2_helper](https://github.com/rubystarashe/helldivers2_helper)
-- [dead_by_unicode_gui](https://github.com/Codex-in-somnio/dead_by_unicode_gui)
 - [hangul-utils](https://github.com/Mineru98/py-hangul-utils)
