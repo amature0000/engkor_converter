@@ -56,6 +56,4 @@ HEIGHT_R = 3.9 #50
 ## related work
 - [한글 키보드 입력 변환](https://mizykk.tistory.com/115)
 - [embeddable pakage에서 tkinter 사용](https://www.sysnet.pe.kr/2/0/13922?pageno=3)
-- [helldivers2_helper](https://github.com/rubystarashe/helldivers2_helper)
-- [dead_by_unicode_gui](https://github.com/Codex-in-somnio/dead_by_unicode_gui)
 - [hangul-utils](https://github.com/Mineru98/py-hangul-utils)
