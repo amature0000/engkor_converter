@@ -58,7 +58,7 @@ def _convert_script(text: str):
 
 def color_iterator():
     names = sorted(ImageColor.colormap.keys())
-    for i in range(0, len(names), 15): yield names[i:i+20]
+    for i in range(0, len(names), 20): yield names[i:i+20]
 color_it = color_iterator()    
 
 def print_colors():    
@@ -92,7 +92,7 @@ def read_json():
             hud_size = float(config.get('hud_size', 0.9))
     except Exception: pass
     print("https://github.com/amature0000/engkor_converter")
-    print("EKconverter ver 3.15.0")
+    print("EKconverter ver 3.15.1")
     print("Home 키를 눌러 HUD 크기 변경")
     print("End 키를 눌러 색상 테이블 보기")
     return hud_size
