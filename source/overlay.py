@@ -9,6 +9,9 @@ HEIGHT_R = 3.9 #50
 class OverlayWindow:
     def __init__(self):
         # Tkinter 설정
+        # self.rect = (-1, -1, 2561, 1441)
+        self.rect = utils.get_window_rect()
+        # ===================================
         self.root = tk.Tk()
         self.root.overrideredirect(True)
         self.root.attributes("-topmost", True)
@@ -26,14 +29,12 @@ class OverlayWindow:
         self.root.withdraw()
     
     def resize(self):
-        # rect = (-1, -1, 2561, 1441)
-        rect = utils.get_window_rect()
         hud_size = utils.read_json()
         # logistic regression
         offset_x = -22.90 * hud_size + 99.93
         offset_y = -12.50 * hud_size + 99.78
 
-        left, top, right, bottom = rect
+        left, top, right, bottom = self.rect
 
         overlay_x = int((right - left) * offset_x / 100)
         overlay_y = int((bottom - top) * offset_y / 100)
