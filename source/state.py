@@ -59,7 +59,7 @@ class State:
             self.fixed_keys += cursor + word
             self.korean_keys.clear()
 
-    # NOTE: 해당 함수는 내부에서 fixed_keys를 수정하므로, caller는 fixed_keys와 이 함수를 원자적으로 접근하면 안 됨
+    # NOTE: 해당 함수는 내부에서 fixed_keys를 수정하므로, caller는 fixed_keys 접근 이전에 이 함수를 호출해야 함.
     def _eng_to_kor(self):
         if len(self.korean_keys) == 0: return ''
         temp_korean_keys = ''.join(self.korean_keys)

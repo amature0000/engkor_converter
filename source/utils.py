@@ -79,20 +79,18 @@ def get_window_rect():
     while (hwnd:=FindWindow(None, game_title)) == 0:
         print('.')
         sleep(1)
-    os.system('cls')
     return GetWindowRect(hwnd)
 
 def read_json():
-    global read_json
-    read_json = None
     hud_size = 0.9
     try:
         with open(cfg, 'r', encoding='utf-8') as f:
             config = json.load(f)
             hud_size = float(config.get('hud_size', 0.9))
     except Exception: pass
+    os.system('cls')
     print("https://github.com/amature0000/engkor_converter")
-    print("EKconverter ver 3.15.1")
+    print("EKconverter ver 3.15.2")
     print("Home 키를 눌러 HUD 크기 변경")
     print("End 키를 눌러 색상 테이블 보기")
     return hud_size
