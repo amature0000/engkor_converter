@@ -13,11 +13,10 @@ flowchart LR
     config.json -->|HUD SIZE| U[utils.py]
     U -->|HUD SIZE| O[overlay.py]
     
-    M[runme.py] -->|key event| S[state.py]
-    S -->|raw data| C[engkor_converter.py]
-    C -->|processed data| S
-    S -->|processed data| M
+    C[engkor_converter.py] -->|processed data| S
+    S[state.py] -->|processed data| M[runme.py]
     M -->|processed data| O
+    M -->|processed data| U
 ```
 
 소스코드를 수정해 다른 게임에 적용하는 예시입니다.
