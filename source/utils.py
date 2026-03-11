@@ -90,7 +90,7 @@ def read_json():
     except Exception: pass
     os.system('cls')
     print("https://github.com/amature0000/engkor_converter")
-    print("EKconverter ver 3.15.2")
+    print("EKconverter ver 3.15.3")
     print("Home 키를 눌러 HUD 크기 변경")
     print("End 키를 눌러 색상 테이블 보기")
     return hud_size
