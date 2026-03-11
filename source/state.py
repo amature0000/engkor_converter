@@ -36,8 +36,8 @@ class State:
         cursor = self._eng_to_kor()
         string = self.fixed_keys + cursor
         if placeholder and (not string): 
-            string = 'Press \"\\\" key to send the message'
-            if self.mode: string = '전송하려면 \"\\\" 키 입력'
+            string = '\"\\\" key to send'
+            if self.mode: string = '\"\\\" 키로 출력'
         return string
     
     def clear(self):
