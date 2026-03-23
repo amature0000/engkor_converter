@@ -24,10 +24,31 @@ class State:
         self.fixed = ""
         self.cursor = ""
     # ==============================================================================================
-    def record(self, text):
+    def write(self, text):
+        result = self._record(text)
+        
+        if self.cursor != "":
+            simulate_key_process("backspace")
+
+        delete = self._eng_to_kor()
+
+        if delete:
+            simulate_write_process(self.cursor)
+        else:
+            simulate_write_process(self.fixed + self.cursor)
+
+        return result
+
+    def clear(self):
+        self.korean_keys.clear()
+        self.fixed = ""
+        self.cursor = ""
+    # ==============================================================================================     
+    def _record(self, text):
         if text in self.engkor_key:
             self.mode = not self.mode
             self.clear()
+            return False
         if self.mode == False:
             return True
         # -----------------------
@@ -39,23 +60,7 @@ class State:
         elif len(text) == 1:
             self._insert(text)
         return False
-    
-    def clear(self):
-        self.korean_keys.clear()
-        self.fixed = ""
-        self.cursor = ""
-
-    def write(self):
-        if self.cursor != "":
-            simulate_key_process("backspace")
-
-        delete = self._eng_to_kor()
-
-        if delete:
-            simulate_write_process(self.cursor)
-        else:
-            simulate_write_process(self.fixed + self.cursor)
-    # ==============================================================================================        
+       
     def _backspace(self):
         if self.korean_keys:
             self.korean_keys.pop()
@@ -74,5 +79,4 @@ class State:
         self.fixed, self.cursor, split_index = engkor(temp_korean_keys)
 
         self.korean_keys = self.korean_keys[split_index:]
-        print(self.fixed, self.cursor, split_index == 0)
         return split_index == 0

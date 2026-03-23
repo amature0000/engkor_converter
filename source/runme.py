@@ -1,10 +1,7 @@
 import keyboard
 from state import State
+from logger import Logger, log_typing
 
-
-def print_infos():
-    print("https://github.com/amature0000/engkor_converter")
-    print("EKconverter ver 4.0.0")
 
 class EventHandler:
     def __init__(self, state:State):
@@ -15,33 +12,31 @@ class EventHandler:
         self.exit_key = 'esc'
         self.color_table_key = 'end'
 
-    def event_handler(self, event):
-        if event.event_type == 'up': return True
-        return self.process(event.name)
-    
+    @log_typing
     def process(self, event):
+        name = event.name
         """command process"""
-        if event == self.toggle_key:
+        if name == self.toggle_key:
             self.typing = not self.typing
             self.state.clear()
             return True
-        elif event == self.exit_key:
+        elif name == self.exit_key:
             self.typing = False
             self.state.clear()
             return True
-            
+        
         if not self.typing: return True
         """typing process"""
-        result = self.state.record(event)
-        self.state.write()
+        result = self.state.write(name)
         return result
 
 def main():
-    print_infos()
+    Logger.log()
+
     state = State()
     e = EventHandler(state)
 
-    keyboard.hook(e.event_handler, suppress=True)
+    keyboard.on_press(e.process, suppress=True)
     keyboard.wait()
 
 if __name__ == "__main__":
