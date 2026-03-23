@@ -1,58 +1,34 @@
 import keyboard
 from state import State
-import utils
-from overlay import OverlayWindow
 
 
 class EventHandler:
-    def __init__(self, overlay:OverlayWindow, state:State):
-        self.overlay = overlay
+    def __init__(self, state:State):
         self.state = state
-        self.simplelock = False
 
         self.typing = False
-        self.start_key = 'enter'
-        self.end_key = '\\'
+        self.toggle_key = 'enter'
         self.exit_key = 'esc'
-        self.settings_key = 'home'
         self.color_table_key = 'end'
 
     def on_key_press(self, event):
-        """setting process"""
-        if event == self.settings_key:
-            hud_size = input("인 게임 HUD SIZE를 입력하세요 : ")
-            utils.save_json(hud_size)
-            self.overlay.resize()
-        if event == self.color_table_key:
-            utils.print_colors()
-        
         """command process"""
-        if event == self.start_key:
+        if event == self.toggle_key:
             self.typing = not self.typing
-            self.state.clear()
-        elif event == self.end_key and self.typing:
-            utils.process_and_insert(self.state.process())
-            self.typing = False
             self.state.clear()
         elif event == self.exit_key:
             self.typing = False
             self.state.clear()
             
+        if not self.typing: return
         """typing process"""
-        if not self.typing:
-            self.overlay.root.withdraw()
-            return
         self.state.record(event)
-        self.overlay.show_message(self.state.process(True))
 
 def main():
-    overlay = OverlayWindow()
     state = State()
 
-    e = EventHandler(overlay, state)
+    e = EventHandler(state)
     keyboard.on_press(lambda event: e.on_key_press(event.name))
-
-    overlay.mainloop()
 
 if __name__ == "__main__":
     main()

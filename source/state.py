@@ -1,13 +1,11 @@
 from eng_kor_converter import engkor
 
-CONFIG_FILE = 'config.json'
 # shift keys
 SHIFT_KEYS = {'R', 'E', 'Q', 'T', 'W', 'O', 'P'}
 
 class State:
     def __init__(self):
         self.mode = True # True: kor, False: eng
-        self.mode_ = True
         self.color = False # True: typing, False: none
 
         self.engkor_key = ['right alt', 'alt']
@@ -15,14 +13,6 @@ class State:
         self.korean_keys = []
     # ==============================================================================================
     def record(self, text):
-        if text == '#':
-            self.color = True
-            self.mode_ = self.mode
-            self.mode = False
-        if self.color and text == 'space':
-            self.color = False
-            self.mode = self.mode_
-
         if text in self.engkor_key:
             self.mode = not self.mode
         elif text == 'backspace':
@@ -69,23 +59,3 @@ class State:
         self.fixed_keys += fixed_str
         self.korean_keys = self.korean_keys[split_index:]
         return cursor
-
-"""
-선형회귀 데이터 
-
-# ratio HUD = 0.75
-OFFSET_X = 82.75
-OFFSET_Y = 90.4
-
-# ratio HUD = 0.8
-OFFSET_X = 81.65
-OFFSET_Y = 89.75
-
-# ratio HUD = 0.85
-OFFSET_X = 80.4
-OFFSET_Y = 89.2
-
-# ratio HUD = 0.9
-OFFSET_X = 79.35
-OFFSET_Y = 88.5
-"""
