@@ -17,7 +17,6 @@ def log_typing(func):
         return result
     return wrapper
 
-# decorator
 def log_mode(func):
     def wrapper(self, *args, **kwargs):
         result = func(self, *args, **kwargs)
@@ -31,6 +30,7 @@ def log_mode(func):
 class Logger:
     ison = False
     mode = True
+    _last_state = (False, True)
 
     @classmethod
     def _init(cls):
@@ -39,6 +39,9 @@ class Logger:
 
     @classmethod
     def log(cls):
+        if cls._last_state == (cls.ison, cls.mode): return
+        
+        cls._last_state = (cls.ison, cls.mode)
         os.system('cls')
         cls._init()
         print()
@@ -48,9 +51,3 @@ class Logger:
 
         print(f"채팅창 상태\t{ison}")
         print(f"한/영 모드\t{mode}")
-
-    @classmethod
-    def update(cls, ison = None, mode = None):
-        if ison: cls.ison = ison
-        if mode: cls.mode = mode
-        cls.log()
