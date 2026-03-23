@@ -1,6 +1,6 @@
 import keyboard
 from state import State
-from logger import Logger, log_typing
+from logger import log_typing
 
 
 class EventHandler:
@@ -35,8 +35,6 @@ class EventHandler:
         return result
 
 def main():
-    Logger.log()
-
     state = State()
     e = EventHandler(state)
 
