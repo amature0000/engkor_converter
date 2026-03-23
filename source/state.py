@@ -1,91 +1,80 @@
 from eng_kor_converter import engkor
+from time import sleep
+import keyboard
+from logger import log_mode
 
-CONFIG_FILE = 'config.json'
+
+def simulate_key_process(key):
+    keyboard.press(key)
+    sleep(0.05)
+    keyboard.release(key)
+    sleep(0.05)
+
+def simulate_write_process(text):
+    keyboard.write(text, delay=0.01)
+
 # shift keys
 SHIFT_KEYS = {'R', 'E', 'Q', 'T', 'W', 'O', 'P'}
 
 class State:
     def __init__(self):
         self.mode = True # True: kor, False: eng
-        self.mode_ = True
-        self.color = False # True: typing, False: none
 
         self.engkor_key = ['right alt', 'alt']
-        self.fixed_keys = ''
         self.korean_keys = []
+        self.fixed = ""
+        self.cursor = ""
     # ==============================================================================================
+    @log_mode
     def record(self, text):
-        if text == '#':
-            self.color = True
-            self.mode_ = self.mode
-            self.mode = False
-        if self.color and text == 'space':
-            self.color = False
-            self.mode = self.mode_
-
         if text in self.engkor_key:
             self.mode = not self.mode
+            self.clear()
+            return False
+        if self.mode == False:
+            return True
+        # -----------------------
+        if text == 'space':
+            self.clear()
+            return True
         elif text == 'backspace':
             self._backspace()
-        elif text == 'space':
-            self._insert(' ')
         elif len(text) == 1:
             self._insert(text)
-
-    def process(self, placeholder = False):
-        cursor = self._eng_to_kor()
-        string = self.fixed_keys + cursor
-        if placeholder and (not string): 
-            string = '\"\\\" key to send'
-            if self.mode: string = '\"\\\" 키로 출력'
-        return string
+        return False
     
     def clear(self):
-        self.fixed_keys = ''
         self.korean_keys.clear()
+        self.fixed = ""
+        self.cursor = ""
+
+    def write(self):
+        if self.cursor != "":
+            simulate_key_process("backspace")
+
+        delete = self._eng_to_kor()
+
+        if delete:
+            simulate_write_process(self.cursor)
+        else:
+            simulate_write_process(self.fixed + self.cursor)
     # ==============================================================================================        
     def _backspace(self):
-        if len(self.korean_keys) > 0:
+        if self.korean_keys:
             self.korean_keys.pop()
-        else:
-            self.fixed_keys = self.fixed_keys[:-1]
+        if not self.korean_keys:
+            self.clear()
+            simulate_key_process("backspace")
 
     def _insert(self, word:str):
-        if self.mode:
-            if word not in SHIFT_KEYS: word = word.lower()
-            self.korean_keys.append(word)
-        else:
-            cursor = self._eng_to_kor()
-            self.fixed_keys += cursor + word
-            self.korean_keys.clear()
+        if word not in SHIFT_KEYS: word = word.lower()
+        self.korean_keys.append(word)
 
-    # NOTE: 해당 함수는 내부에서 fixed_keys를 수정하므로, caller는 fixed_keys 접근 이전에 이 함수를 호출해야 함.
     def _eng_to_kor(self):
-        if len(self.korean_keys) == 0: return ''
+        if len(self.korean_keys) == 0: return False
         temp_korean_keys = ''.join(self.korean_keys)
 
-        fixed_str, cursor, split_index = engkor(temp_korean_keys)
+        self.fixed, self.cursor, split_index = engkor(temp_korean_keys)
 
-        self.fixed_keys += fixed_str
         self.korean_keys = self.korean_keys[split_index:]
-        return cursor
-
-"""
-선형회귀 데이터 
-
-# ratio HUD = 0.75
-OFFSET_X = 82.75
-OFFSET_Y = 90.4
-
-# ratio HUD = 0.8
-OFFSET_X = 81.65
-OFFSET_Y = 89.75
-
-# ratio HUD = 0.85
-OFFSET_X = 80.4
-OFFSET_Y = 89.2
-
-# ratio HUD = 0.9
-OFFSET_X = 79.35
-OFFSET_Y = 88.5
-"""
+        return split_index == 0
