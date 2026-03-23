@@ -1,6 +1,7 @@
 from eng_kor_converter import engkor
 from time import sleep
 import keyboard
+from logger import log_mode
 
 
 def simulate_key_process(key):
@@ -24,10 +25,12 @@ class State:
         self.fixed = ""
         self.cursor = ""
     # ==============================================================================================
+    @log_mode
     def record(self, text):
         if text in self.engkor_key:
             self.mode = not self.mode
             self.clear()
+            return False
         if self.mode == False:
             return True
         # -----------------------
@@ -74,5 +77,4 @@ class State:
         self.fixed, self.cursor, split_index = engkor(temp_korean_keys)
 
         self.korean_keys = self.korean_keys[split_index:]
-        print(self.fixed, self.cursor, split_index == 0)
         return split_index == 0
