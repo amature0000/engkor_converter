@@ -11,17 +11,9 @@ def log_typing(func):
     def wrapper(self, *args, **kwargs):
         result = func(self, *args, **kwargs)
 
-        if self: Logger.ison = self.typing
-        Logger.log()
-        
-        return result
-    return wrapper
-
-def log_mode(func):
-    def wrapper(self, *args, **kwargs):
-        result = func(self, *args, **kwargs)
-
-        if self: Logger.mode = self.mode
+        if self: 
+            Logger.ison = self.typing
+            Logger.mode = self.state.mode
         Logger.log()
         
         return result
@@ -30,12 +22,12 @@ def log_mode(func):
 class Logger:
     ison = False
     mode = True
-    _last_state = (False, True)
+    _last_state = (None, None)
 
     @classmethod
     def _init(cls):
         print("https://github.com/amature0000/engkor_converter")
-        print("EKconverter ver 4.0.0")
+        print("EKconverter ver 4.0.1")
 
     @classmethod
     def log(cls):

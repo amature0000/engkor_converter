@@ -1,7 +1,6 @@
 from eng_kor_converter import engkor
 from time import sleep
 import keyboard
-from logger import log_mode
 
 
 def simulate_key_process(key):
@@ -25,7 +24,6 @@ class State:
         self.fixed = ""
         self.cursor = ""
     # ==============================================================================================
-    @log_mode
     def record(self, text):
         if text in self.engkor_key:
             self.mode = not self.mode
