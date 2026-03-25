@@ -20,21 +20,13 @@ VOWS = {
 # =============================================================================
 # caller must check if len(text) == 0
 def engkor(text):
-    result_1 = ''
-    result_2 = convert_key(''.join(text), 'ko')
+    result = convert_key(''.join(text), 'ko')
     split_index = 0
 
-    len_text = len(text)
-    last_t = text[len_text - 1]
-    before_last_t = text[len_text - 2]
-
-    # 현재 cursor가 2글자를 담고 있다면 -> 앞 글자를 제거
-    if len(result_2) == 2:
-        result_1 = result_2[0]
-        result_2 = result_2[1]
-        split_index = len_text - 1
-        # 뒤 글자가 초성-중성 결합이라면 -> 제거하는 범위--
-        if last_t in VOWS and before_last_t in CONS:
+    if len(result) == 2:
+        split_index = len(text) - 1
+        # 마지막 2 글자가 초성-중성 조합인 경우
+        if text[-1] in VOWS and text[-2] in CONS:
             split_index -= 1
-    # '', text, 0
-    return result_1, result_2, split_index
+            
+    return result, split_index

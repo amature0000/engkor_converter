@@ -20,30 +20,29 @@ class State:
         self.mode = True # True: kor, False: eng
 
         self.engkor_key = ['right alt', 'alt']
+
         self.korean_keys = []
-        self.fixed = ""
         self.cursor = ""
+        self.cursor_before = ""
     # ==============================================================================================
-    def write(self, text):
+    def process(self, text):
         result = self._record(text)
-        
-        if self.cursor != "":
+        self._eng_to_kor()
+
+        if self._calculate_diff():
             simulate_key_process("backspace")
 
-        delete = self._eng_to_kor()
+        if not self.cursor: return result
 
-        if delete:
-            simulate_write_process(self.cursor)
-        else:
-            simulate_write_process(self.fixed + self.cursor)
-
+        simulate_write_process(self.cursor)
+        self.cursor_before = self.cursor[-1]
         return result
 
     def clear(self):
         self.korean_keys.clear()
-        self.fixed = ""
+        self.cursor_before = ""
         self.cursor = ""
-    # ==============================================================================================     
+    # ==============================================================================================
     def _record(self, text):
         if text in self.engkor_key:
             self.mode = not self.mode
@@ -73,10 +72,19 @@ class State:
         self.korean_keys.append(word)
 
     def _eng_to_kor(self):
-        if len(self.korean_keys) == 0: return False
-        temp_korean_keys = ''.join(self.korean_keys)
+        if len(self.korean_keys) == 0: return
 
-        self.fixed, self.cursor, split_index = engkor(temp_korean_keys)
-
+        self.cursor, split_index = engkor(''.join(self.korean_keys))
+        
         self.korean_keys = self.korean_keys[split_index:]
-        return split_index == 0
+
+    def _calculate_diff(self):
+        # 최초 상태에서 전이 시 
+        if not self.cursor_before: return False
+
+        # index 0의 글자가 변화했는지 검사
+        result = False
+        if self.cursor[0] != self.cursor_before: result = True
+        else: self.cursor = self.cursor[1:]
+
+        return result
