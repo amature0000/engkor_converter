@@ -27,7 +27,7 @@ class EventHandler:
         
         if not self.typing: return True
         """typing process"""
-        result = self.state.write(name)
+        result = self.state.process(name)
         return result
 
 def main():
