@@ -11,9 +11,8 @@ def log_typing(func):
     def wrapper(self, *args, **kwargs):
         result = func(self, *args, **kwargs)
 
-        if self: 
-            Logger.ison = self.typing
-            Logger.mode = self.state.mode
+        Logger.ison = self.typing
+        Logger.mode = self.state.mode
         Logger.log()
         
         return result
