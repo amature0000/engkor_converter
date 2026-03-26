@@ -27,7 +27,7 @@ class Logger:
     @classmethod
     def _init(cls):
         print("https://github.com/amature0000/engkor_converter")
-        print("EKconverter ver 4.0.1")
+        print("EKconverter ver 4.0.2")
 
     @classmethod
     def log(cls):
