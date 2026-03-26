@@ -4,13 +4,8 @@ import keyboard
 
 
 def simulate_key_process(key):
-    keyboard.press(key)
-    sleep(0.05)
-    keyboard.release(key)
-    sleep(0.05)
-
-def simulate_write_process(text):
-    keyboard.write(text, delay=0.01)
+    keyboard.press_and_release(key)
+    sleep(0.02)
 
 # shift keys
 SHIFT_KEYS = {'R', 'E', 'Q', 'T', 'W', 'O', 'P'}
@@ -34,7 +29,7 @@ class State:
 
         if not self.cursor: return result
 
-        simulate_write_process(self.cursor)
+        keyboard.write(self.cursor, delay=0.01)
         self.cursor_before = self.cursor[-1]
         return result
 
