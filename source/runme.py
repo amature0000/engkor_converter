@@ -30,6 +30,7 @@ class EventHandler:
     
     def _change_delay(self):
         self.state.change_delay()
+        return self.typing
 
 
 def main():
