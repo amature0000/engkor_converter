@@ -99,7 +99,7 @@ class State:
         return True
     # ==============================================================================================
     def change_delay(self):
-        self.delay = self.delay + DELAY/10
+        self.delay = self.delay + int(DELAY/10)
         if self.delay > DELAY * 2: self.delay = DELAY
         with open(cfg, 'w') as f:
             json.dump({'delay': self.delay}, f)
