@@ -28,7 +28,7 @@ class Logger:
     @classmethod
     def _init(cls):
         print("https://github.com/amature0000/engkor_converter")
-        print("EKconverter ver 4.1.2")
+        print("EKconverter ver 4.1.3")
         print("End 키를 눌러 입력 지연시간 조절")
 
     @classmethod

@@ -17,7 +17,7 @@ class State:
     def __init__(self):
         self.mode = True # True: kor, False: eng
 
-        self.engkor_keys = ['right alt', 'alt']
+        self.engkor_keys = ['right alt', 'alt', 'hangeul']
         self.special_keys = {
             'space': self._handle_space,
             'backspace': self._handle_backspace
@@ -26,6 +26,7 @@ class State:
         self.cursor = ""
         self.cursor_before = ""
 
+        self.delay = DELAY
         try:
             with open(cfg, 'r', encoding='utf-8') as f:
                 config = json.load(f)
