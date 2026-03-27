@@ -9,14 +9,14 @@
 ```
 runme.py
     ├─ Logger: 프로그램 실행 정보 및 채팅창 상태를 실시간으로 출력하는 클래스
-    │     • @log_typing: 클래스 외부 데코레이터로 EventHandler.process 메소드에 사용되어야 함.
+    │     • @log_typing: 클래스 외부 데코레이터로 EventHandler 메소드에 사용되어야 함.
     │
     ├─ EventHandler: os 레벨의 키보드 이벤트를 받아 처리하는 클래스
     │     • process(): 키보드 이벤트를 받아 상태를 업데이트하고 State 객체로 전달
     │
     └─ State: 한글 IME 기능 및 가상 입력을 수행하는 클래스
-          • _record(): 키보드 이벤트를 받아 상태 업데이트
-          • _eng_to_kor(): 업데이트된 상태를 계산하여 출력할 텍스트 계산
+          • _record(): 키보드 이벤트를 누적
+          • _update_state(): 누적된 키보드 입력을 바탕으로 출력할 텍스트 계산
           • _calculate_diff(): 출력할 텍스트와 직전 텍스트를 비교하여 가상 키보드가 수행할 입력 계산
           • process(): 가상 키보드 입력을 통해 계산된 텍스트 출력
 ```

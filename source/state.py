@@ -3,34 +3,30 @@ from time import sleep
 import keyboard
 
 
-def simulate_key_process(key):
-    keyboard.press_and_release(key)
-    sleep(0.02)
-
 # shift keys
 SHIFT_KEYS = {'R', 'E', 'Q', 'T', 'W', 'O', 'P'}
+DELAY = 0.01
 
 class State:
     def __init__(self):
         self.mode = True # True: kor, False: eng
 
-        self.engkor_key = ['right alt', 'alt']
-
+        self.engkor_keys = ['right alt', 'alt']
+        self.special_keys = {
+            'space': self._handle_space,
+            'backspace': self._handle_backspace
+        }
         self.korean_keys = []
         self.cursor = ""
         self.cursor_before = ""
     # ==============================================================================================
     def process(self, text):
         result = self._record(text)
-        self._eng_to_kor()
+        self._update_state()
 
-        if self._calculate_diff():
-            simulate_key_process("backspace")
-
-        if not self.cursor: return result
-
-        keyboard.write(self.cursor, delay=0.01)
-        self.cursor_before = self.cursor[-1]
+        if self.cursor:
+            keyboard.write(self.cursor, delay=0.01)
+            
         return result
 
     def clear(self):
@@ -38,48 +34,54 @@ class State:
         self.cursor_before = ""
         self.cursor = ""
     # ==============================================================================================
-    def _record(self, text):
-        if text in self.engkor_key:
+    def _record(self, text : str):
+        if text in self.engkor_keys:
             self.mode = not self.mode
             self.clear()
             return False
+        
         if self.mode == False:
             return True
         # -----------------------
-        if text == 'space':
-            self.clear()
-            return True
-        elif text == 'backspace':
-            self._backspace()
-        elif len(text) == 1:
-            self._insert(text)
+        if text in self.special_keys:
+            return self.special_keys[text]()
+        
+        if len(text) == 1:
+            if text not in SHIFT_KEYS: text = text.lower()
+            self.korean_keys.append(text)
         return False
-       
-    def _backspace(self):
+    
+    def _handle_space(self):
+        self.clear()
+        return True
+    
+    def _handle_backspace(self):
         if self.korean_keys:
             self.korean_keys.pop()
         if not self.korean_keys:
             self.clear()
-            simulate_key_process("backspace")
+            keyboard.press_and_release("backspace")
+        return False
 
-    def _insert(self, word:str):
-        if word not in SHIFT_KEYS: word = word.lower()
-        self.korean_keys.append(word)
-
-    def _eng_to_kor(self):
+    def _update_state(self):
         if len(self.korean_keys) == 0: return
 
         self.cursor, split_index = engkor(''.join(self.korean_keys))
         
         self.korean_keys = self.korean_keys[split_index:]
 
+        if self._calculate_diff():
+            keyboard.press_and_release("backspace")
+            sleep(DELAY)
+        if self.cursor:
+            self.cursor_before = self.cursor[-1]
+
     def _calculate_diff(self):
         # 최초 상태에서 전이 시 
         if not self.cursor_before: return False
 
         # index 0의 글자가 변화했는지 검사
-        result = False
-        if self.cursor[0] != self.cursor_before: result = True
-        else: self.cursor = self.cursor[1:]
-
-        return result
+        if self.cursor.startswith(self.cursor_before):
+            self.cursor = self.cursor[1:]
+            return False
+        return True
