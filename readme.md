@@ -9,7 +9,7 @@
 ```
 runme.py
     ├─ Logger: 프로그램 실행 정보 및 채팅창 상태를 실시간으로 출력하는 클래스
-    │     • @log_typing: 클래스 외부 데코레이터로 EventHandler 메소드에 사용되어야 함.
+    │     • @log_typing: 클래스 외부 데코레이터로 EventHandler 클래스의 메소드에 사용되어야 함.
     │
     ├─ EventHandler: os 레벨의 키보드 이벤트를 받아 처리하는 클래스
     │     • process(): 키보드 이벤트를 받아 상태를 업데이트하고 State 객체로 전달
