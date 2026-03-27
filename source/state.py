@@ -1,11 +1,17 @@
 from eng_kor_converter import engkor
 from time import sleep
 import keyboard
+from pathlib import Path
+import json
+import os
 
+appdata = Path(os.environ.get("APPDATA", "")) / "EKconverter"
+appdata.mkdir(exist_ok=True)
+cfg = appdata / 'config.json'
 
 # shift keys
 SHIFT_KEYS = {'R', 'E', 'Q', 'T', 'W', 'O', 'P'}
-DELAY = 0.01
+DELAY = 10 # ms
 
 class State:
     def __init__(self):
@@ -19,6 +25,12 @@ class State:
         self.korean_keys = []
         self.cursor = ""
         self.cursor_before = ""
+
+        try:
+            with open(cfg, 'r', encoding='utf-8') as f:
+                config = json.load(f)
+                self.delay = int(config.get('delay', DELAY))
+        except Exception: pass
     # ==============================================================================================
     def process(self, text):
         result = self._record(text)
@@ -72,7 +84,7 @@ class State:
 
         if self._calculate_diff():
             keyboard.press_and_release("backspace")
-            sleep(DELAY)
+            sleep(DELAY / 1000)
         if self.cursor:
             self.cursor_before = self.cursor[-1]
 
@@ -85,3 +97,9 @@ class State:
             self.cursor = self.cursor[1:]
             return False
         return True
+    # ==============================================================================================
+    def change_delay(self):
+        self.delay = self.delay + DELAY/10
+        if self.delay > DELAY * 2: self.delay = DELAY
+        with open(cfg, 'w') as f:
+            json.dump({'delay': self.delay}, f)

@@ -1,6 +1,7 @@
 import keyboard
 from state import State
 from logger import Logger, log_typing
+from time import sleep
 
 class EventHandler:
     def __init__(self, state:State):
@@ -9,7 +10,8 @@ class EventHandler:
         self.typing = False
         self.command = { # controls self.typing
             'enter': lambda: not self.typing,
-            'esc': lambda: False
+            'esc': lambda: False,
+            'end': self._change_delay
         }
 
     @log_typing
@@ -25,10 +27,15 @@ class EventHandler:
         """typing process"""
         result = self.state.process(name)
         return result
+    
+    def _change_delay(self):
+        self.state.change_delay()
+
 
 def main():
     state = State()
     e = EventHandler(state)
+    Logger.delay = state.delay
     Logger.log()
 
     keyboard.on_press(e.process, suppress=True)

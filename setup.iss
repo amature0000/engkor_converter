@@ -1,6 +1,6 @@
 [Setup]
 AppName=EKconverter
-AppVersion=4.0.3
+AppVersion=4.1.0
 DefaultDirName={pf}\EKconverter
 DefaultGroupName=EKconverter
 OutputBaseFilename=EKconverterSetup
