@@ -1,6 +1,6 @@
 [Setup]
 AppName=EKconverter
-AppVersion=4.1.1
+AppVersion=4.1.2
 DefaultDirName={pf}\EKconverter
 DefaultGroupName=EKconverter
 OutputBaseFilename=EKconverterSetup
@@ -11,6 +11,7 @@ PrivilegesRequired=admin
 [Files]
 Source: "python_embed\*"; DestDir: "{app}\python"; Flags: recursesubdirs
 Source: "source\*";       DestDir: "{app}\source"; Flags: recursesubdirs
+Source: "source\config.json"; DestDir: "{userappdata}\EKconverter"; Flags: recursesubdirs
 
 [Run]
 ; 1) pip 설치
