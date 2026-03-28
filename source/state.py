@@ -35,7 +35,11 @@ class State:
     # ==============================================================================================
     def process(self, text):
         result = self._record(text)
-        self._update_state()
+        back = self._update_state()
+
+        if back:
+            keyboard.press_and_release("backspace")
+            sleep(DELAY / 1000)
 
         if self.cursor:
             keyboard.write(self.cursor, delay=0.01)
@@ -73,21 +77,21 @@ class State:
             self.korean_keys.pop()
         if not self.korean_keys:
             self.clear()
-            keyboard.press_and_release("backspace")
+            return True
         return False
 
     def _update_state(self):
-        if len(self.korean_keys) == 0: return
+        if len(self.korean_keys) == 0: return False
 
         self.cursor, split_index = engkor(''.join(self.korean_keys))
         
         self.korean_keys = self.korean_keys[split_index:]
 
-        if self._calculate_diff():
-            keyboard.press_and_release("backspace")
-            sleep(DELAY / 1000)
+        result = self._calculate_diff()
         if self.cursor:
             self.cursor_before = self.cursor[-1]
+
+        return result
 
     def _calculate_diff(self):
         # 최초 상태에서 전이 시 

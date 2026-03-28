@@ -1,6 +1,6 @@
 [Setup]
 AppName=EKconverter
-AppVersion=4.1.3
+AppVersion=4.1.4
 DefaultDirName={pf}\EKconverter
 DefaultGroupName=EKconverter
 OutputBaseFilename=EKconverterSetup
@@ -8,10 +8,17 @@ Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=admin
 
+[InstallDelete]
+Type: filesandordirs; Name: "{app}\python"
+
 [Files]
 Source: "python_embed\*"; DestDir: "{app}\python"; Flags: recursesubdirs
 Source: "source\*";       DestDir: "{app}\source"; Flags: recursesubdirs
 Source: "source\config.json"; DestDir: "{userappdata}\EKconverter"; Flags: recursesubdirs
+
+[UninstallDelete]
+Type: filesandordirs; Name: "{app}"
+Type: filesandordirs; Name: "{userappdata}\EKconverter"
 
 [Run]
 ; 1) pip 설치
