@@ -34,7 +34,9 @@ class State:
         except Exception: pass
     # ==============================================================================================
     def process(self, text):
+        # 현재 상태를 업데이트
         result = self._record(text)
+        # 업데이트된 상태를 기반으로 출력할 텍스트 계산
         back = self._update_state()
 
         if back:
@@ -83,25 +85,30 @@ class State:
     def _update_state(self):
         if len(self.korean_keys) == 0: return False
 
+        # 현재 상태를 한글로 변경
         self.cursor, split_index = engkor(''.join(self.korean_keys))
         
+        # commit된 한글에 대응되는 상태 제거
         self.korean_keys = self.korean_keys[split_index:]
 
+        # 이전 커서와 비교해 출력할 값 계산
         result = self._calculate_diff()
-        if self.cursor:
-            self.cursor_before = self.cursor[-1]
-
         return result
 
     def _calculate_diff(self):
         # 최초 상태에서 전이 시 
         if not self.cursor_before: return False
+        result = True
 
         # index 0의 글자가 변화했는지 검사
         if self.cursor.startswith(self.cursor_before):
             self.cursor = self.cursor[1:]
-            return False
-        return True
+            result = False
+
+        # 이전 상태 저장
+        if self.cursor:
+            self.cursor_before = self.cursor[-1]
+        return result
     # ==============================================================================================
     def change_delay(self):
         self.delay = self.delay + int(DELAY/10)
