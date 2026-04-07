@@ -1,7 +1,6 @@
 import keyboard
 from state import State
 from logger import Logger, log_typing
-from time import sleep
 
 class EventHandler:
     def __init__(self, state:State):
