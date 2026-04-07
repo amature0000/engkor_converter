@@ -41,7 +41,7 @@ class State:
 
         if back:
             keyboard.press_and_release("backspace")
-            sleep(DELAY / 1000)
+            sleep(self.delay / 1000)
 
         if self.cursor:
             keyboard.write(self.cursor, delay=0.01)
