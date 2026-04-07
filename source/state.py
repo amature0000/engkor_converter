@@ -96,12 +96,12 @@ class State:
         return result
 
     def _calculate_diff(self):
-        # 최초 상태에서 전이 시 
-        if not self.cursor_before: return False
         result = True
+        # 최초 상태에서 전이 시 
+        if not self.cursor_before: result = False
 
         # index 0의 글자가 변화했는지 검사
-        if self.cursor.startswith(self.cursor_before):
+        elif self.cursor.startswith(self.cursor_before):
             self.cursor = self.cursor[1:]
             result = False
 
