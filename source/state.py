@@ -34,9 +34,9 @@ class State:
         except Exception: pass
     # ==============================================================================================
     def process(self, text):
-        # 현재 상태를 업데이트
+        # 키보드 이벤트 누적
         result = self._record(text)
-        # 업데이트된 상태를 기반으로 출력할 텍스트 계산
+        # 상태 업데이트
         back = self._update_state()
 
         if back:
@@ -85,13 +85,13 @@ class State:
     def _update_state(self):
         if len(self.korean_keys) == 0: return False
 
-        # 현재 상태를 한글로 변경
+        # cursor 업데이트
         self.cursor, split_index = engkor(''.join(self.korean_keys))
         
-        # commit된 한글에 대응되는 상태 제거
+        # 확정된 한글 문자열에 대응되는 korean_keys 제거
         self.korean_keys = self.korean_keys[split_index:]
 
-        # 이전 커서와 비교해 출력할 값 계산
+        # 이전 cursor와 비교해 최종 cursor 계산
         result = self._calculate_diff()
         return result
 
