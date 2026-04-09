@@ -9,22 +9,20 @@ appdata = Path(os.environ.get("APPDATA", "")) / "EKconverter"
 appdata.mkdir(exist_ok=True)
 cfg = appdata / 'config.json'
 
-# shift keys
 SHIFT_KEYS = {'R', 'E', 'Q', 'T', 'W', 'O', 'P'}
+EK_KEYS = {'right alt', 'alt', 'hangeul'}
 DELAY = 10 # ms
 
 class State:
     def __init__(self):
         self.mode = True # True: kor, False: eng
 
-        self.engkor_keys = ['right alt', 'alt', 'hangeul']
         self.special_keys = {
             'space': self._handle_space,
             'backspace': self._handle_backspace
         }
         self.korean_keys = []
-        self.cursor = ""
-        self.cursor_before = ""
+        self.kstring_before = ""
 
         self.delay = DELAY
         try:
@@ -37,24 +35,23 @@ class State:
         # 키보드 이벤트 누적
         result = self._record(text)
         # 상태 업데이트
-        back = self._update_state()
+        back, kstring = self._update_state()
 
         if back:
             keyboard.press_and_release("backspace")
             sleep(self.delay / 1000)
 
-        if self.cursor:
-            keyboard.write(self.cursor, delay=0.01)
+        if kstring:
+            keyboard.write(kstring, delay=0.01)
             
         return result
 
     def clear(self):
         self.korean_keys.clear()
-        self.cursor_before = ""
-        self.cursor = ""
+        self.kstring_before = ""
     # ==============================================================================================
     def _record(self, text : str):
-        if text in self.engkor_keys:
+        if text in EK_KEYS:
             self.mode = not self.mode
             self.clear()
             return False
@@ -83,32 +80,32 @@ class State:
         return False
 
     def _update_state(self):
-        if len(self.korean_keys) == 0: return False
+        if len(self.korean_keys) == 0: return False, ""
 
-        # cursor 업데이트
-        self.cursor, split_index = engkor(''.join(self.korean_keys))
+        # 한글 문자열 계산
+        kstring, split_index = engkor(''.join(self.korean_keys))
         
         # 확정된 한글 문자열에 대응되는 korean_keys 제거
         self.korean_keys = self.korean_keys[split_index:]
 
-        # 이전 cursor와 비교해 최종 cursor 계산
-        result = self._calculate_diff()
-        return result
+        # 이전 한글 문자열과 비교해 최종 한글 문자열 계산
+        result, kstring = self._calculate_diff(kstring)
+        return result, kstring
 
-    def _calculate_diff(self):
+    def _calculate_diff(self, kstring):
         result = True
         # 최초 상태에서 전이 시 
-        if not self.cursor_before: result = False
+        if not self.kstring_before: result = False
 
         # index 0의 글자가 변화했는지 검사
-        elif self.cursor.startswith(self.cursor_before):
-            self.cursor = self.cursor[1:]
+        elif kstring.startswith(self.kstring_before):
+            kstring = kstring[1:]
             result = False
 
         # 이전 상태 저장
-        if self.cursor:
-            self.cursor_before = self.cursor[-1]
-        return result
+        if kstring:
+            self.kstring_before = kstring[-1]
+        return result, kstring
     # ==============================================================================================
     def change_delay(self):
         self.delay = self.delay + int(DELAY/10)
