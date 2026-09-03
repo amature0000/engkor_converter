@@ -1,5 +1,5 @@
 import keyboard
-from state import State
+from state import State, EK_KEYS
 from logger import Logger, log_typing
 
 class EventHandler:
@@ -26,6 +26,13 @@ class EventHandler:
         """typing process"""
         result = self.state.process(name)
         return result
+
+    def release_callback(self, event):
+        name = event.name
+        if self.typing:
+            if name in EK_KEYS: return False
+            if self.state.mode: return False
+        return True
     
     def _change_delay(self):
         self.state.change_delay()
@@ -39,6 +46,7 @@ def main():
     Logger.log()
 
     keyboard.on_press(e.process, suppress=True)
+    keyboard.on_release(e.release_callback, suppress=True)
     keyboard.wait()
 
 if __name__ == "__main__":
